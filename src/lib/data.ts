@@ -1,0 +1,156 @@
+import type { Product } from '@/types';
+
+export const products: Product[] = [
+  {
+    id: 'agbada-001',
+    name: 'Regal Agbada Ensemble',
+    description: 'A masterpiece of tailoring, this Agbada set is perfect for making a grand entrance. It includes the grand boubou, a long-sleeved shirt, and matching trousers.',
+    category: 'traditional',
+    type: 'made-to-order',
+    images: ['https://placehold.co/600x800.png', 'https://placehold.co/600x800.png', 'https://placehold.co/600x800.png'],
+    price: 120000,
+    variations: {
+      sizes: ['S', 'M', 'L', 'XL', 'Custom'],
+      colors: ['Royal Blue', 'Ivory White', 'Charcoal Black'],
+      materials: ['Guinea Brocade', 'Aso-Oke', 'Lace'],
+    },
+    details: {
+      materialComposition: '100% Premium Cotton Brocade',
+      careInstructions: 'Dry clean only. Iron on low heat.',
+      sizingInfo: 'Custom measurements required for the perfect fit. See our size guide.',
+    }
+  },
+  {
+    id: 'dashiki-001',
+    name: 'Vibrant Ankara Dashiki',
+    description: 'A modern take on the classic Dashiki, featuring a bold Ankara print. Comfortable and stylish for any casual or semi-formal event.',
+    category: 'traditional',
+    type: 'ready-made',
+    images: ['https://placehold.co/600x800.png', 'https://placehold.co/600x800.png'],
+    price: 45000,
+    variations: {
+      sizes: ['M', 'L', 'XL'],
+      colors: ['Red/Gold Pattern', 'Blue/Green Pattern'],
+      materials: ['Ankara Wax Print', 'Polished Cotton'],
+    },
+    details: {
+      materialComposition: '100% Waxed Cotton',
+      careInstructions: 'Machine wash cold. Hang to dry.',
+      sizingInfo: 'Available in standard sizes. Check our ready-made chart.',
+    }
+  },
+  {
+    id: 'kaftan-001',
+    name: 'Senator Style Kaftan',
+    description: 'Embody sophistication with this sleek Senator-style kaftan. Its minimalist design is perfect for the modern Nigerian man.',
+    category: 'traditional',
+    type: 'ready-made',
+    images: ['https://placehold.co/600x800.png', 'https://placehold.co/600x800.png', 'https://placehold.co/600x800.png', 'https://placehold.co/600x800.png'],
+    price: 65000,
+    variations: {
+      sizes: ['S', 'M', 'L', 'XL'],
+      colors: ['Navy Blue', 'Burgundy', 'Grey'],
+      materials: ['Italian Cashmere', 'Polished Cotton'],
+    },
+    details: {
+      materialComposition: '70% Wool, 30% Polyester Blend',
+      careInstructions: 'Dry clean recommended. Can be hand washed cold.',
+      sizingInfo: 'True to size. Consult our measurement guide.',
+    }
+  },
+  {
+    id: 'shirt-001',
+    name: 'Linen Casual Shirt',
+    description: 'Stay cool and stylish in our premium linen shirt. A versatile piece that can be dressed up or down.',
+    category: 'casual',
+    type: 'ready-made',
+    images: ['https://placehold.co/600x800.png', 'https://placehold.co/600x800.png'],
+    price: 35000,
+    variations: {
+      sizes: ['M', 'L', 'XL', 'XXL'],
+      colors: ['Sky Blue', 'White', 'Beige'],
+      materials: ['Linen Blend'],
+    },
+    details: {
+      materialComposition: '55% Linen, 45% Cotton',
+      careInstructions: 'Machine wash warm. Tumble dry low.',
+      sizingInfo: 'Relaxed fit. Order your usual size.',
+    }
+  },
+  {
+    id: 'trousers-001',
+    name: 'Classic Chino Trousers',
+    description: 'The perfect pair of chinos for any occasion. Expertly tailored for a comfortable and flattering fit.',
+    category: 'casual',
+    type: 'ready-made',
+    images: ['https://placehold.co/600x800.png', 'https://placehold.co/600x800.png', 'https://placehold.co/600x800.png'],
+    price: 40000,
+    variations: {
+      sizes: ['30W', '32W', '34W', '36W'],
+      colors: ['Khaki', 'Navy', 'Black'],
+      materials: ['Cotton Twill'],
+    },
+    details: {
+      materialComposition: '98% Cotton, 2% Elastane',
+      careInstructions: 'Machine wash cold with like colors.',
+      sizingInfo: 'Slim-fit design. Available in various waist sizes.',
+    }
+  },
+  {
+    id: 'polo-001',
+    name: 'Signature Logo Polo',
+    description: 'A timeless polo shirt featuring our subtle gold-stitched logo. A staple for any discerning gentleman\'s wardrobe.',
+    category: 'casual',
+    type: 'ready-made',
+    images: ['https://placehold.co/600x800.png'],
+    price: 28000,
+    variations: {
+      sizes: ['S', 'M', 'L', 'XL'],
+      colors: ['Black', 'White', 'Forest Green'],
+      materials: ['Pique Cotton'],
+    },
+    details: {
+      materialComposition: '100% Pique Cotton',
+      careInstructions: 'Machine wash. Do not bleach. Tumble dry low.',
+      sizingInfo: 'Classic fit. Consult the size chart for details.',
+    }
+  },
+  {
+    id: 'custom-suit-001',
+    name: 'Bespoke Wedding Suit',
+    description: 'Create the suit of your dreams for your special day. Our master tailors will guide you through fabric selection and design.',
+    category: 'custom',
+    type: 'made-to-order',
+    images: ['https://placehold.co/600x800.png', 'https://placehold.co/600x800.png'],
+    price: 250000,
+    variations: {
+      sizes: ['Custom'],
+      colors: ['Client\'s Choice'],
+      materials: ['Italian Wool', 'Velvet', 'Silk Blend'],
+    },
+    details: {
+      materialComposition: 'Based on client selection.',
+      careInstructions: 'Varies by fabric. Care instructions provided upon delivery.',
+      sizingInfo: 'Fully bespoke. Requires multiple fittings.',
+    }
+  },
+    {
+    id: 'isiagu-001',
+    name: 'Modern Isiagu Top',
+    description: 'A contemporary interpretation of the traditional Igbo Isiagu top, adorned with the iconic lion head pattern. Perfect for cultural events.',
+    category: 'traditional',
+    type: 'made-to-order',
+    images: ['https://placehold.co/600x800.png', 'https://placehold.co/600x800.png'],
+    price: 75000,
+    variations: {
+      sizes: ['M', 'L', 'XL', 'Custom'],
+      colors: ['Black Velvet', 'Red Velvet'],
+      materials: ['Velvet'],
+    },
+    details: {
+      materialComposition: 'High-quality velvet with embroidery',
+      careInstructions: 'Dry clean only to preserve the embroidery.',
+      sizingInfo: 'Can be made to standard sizes or custom measurements.',
+    }
+  },
+];

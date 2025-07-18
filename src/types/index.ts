@@ -1,0 +1,26 @@
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  category: 'traditional' | 'casual' | 'custom';
+  type: 'ready-made' | 'made-to-order';
+  images: string[];
+  price: number;
+  variations: {
+    sizes: string[];
+    colors: string[];
+    materials: string[];
+  };
+  details: {
+    materialComposition: string;
+    careInstructions: string;
+    sizingInfo: string;
+  }
+}
+
+export type ProductRecommendation = {
+  name: string;
+  description: string;
+  category: string;
+  type: string;
+}

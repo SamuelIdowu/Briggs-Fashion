@@ -16,6 +16,7 @@ export function Header() {
     { href: "/products?category=casual", label: "Casual" },
     { href: "/about", label: "About Us" },
     { href: "/size-guide", label: "Size Guide" },
+    { href: "/contact", label: "Contact" },
   ];
 
   const NavLinks = ({ className }: { className?: string }) => (

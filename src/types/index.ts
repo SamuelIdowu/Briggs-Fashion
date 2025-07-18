@@ -17,10 +17,3 @@ export interface Product {
     sizingInfo: string;
   }
 }
-
-export type ProductRecommendation = {
-  name: string;
-  description: string;
-  category: string;
-  type: string;
-}

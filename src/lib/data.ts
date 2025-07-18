@@ -1,4 +1,4 @@
-import type { Product } from '@/types';
+import type { Product, Order } from '@/types';
 
 export const products: Product[] = [
   {
@@ -152,5 +152,49 @@ export const products: Product[] = [
       careInstructions: 'Dry clean only to preserve the embroidery.',
       sizingInfo: 'Can be made to standard sizes or custom measurements.',
     }
+  },
+];
+
+
+export const orders: Order[] = [
+  {
+    id: 'ORD-001',
+    customerName: 'Tunde Oladipo',
+    customerEmail: 'tunde@example.com',
+    date: '2023-10-26T10:00:00Z',
+    status: 'Delivered',
+    total: 120000,
+  },
+  {
+    id: 'ORD-002',
+    customerName: 'Amina Bello',
+    customerEmail: 'amina@example.com',
+    date: '2023-10-25T14:30:00Z',
+    status: 'Shipped',
+    total: 45000,
+  },
+  {
+    id: 'ORD-003',
+    customerName: 'Chinedu Okoro',
+    customerEmail: 'chinedu@example.com',
+    date: '2023-10-25T09:15:00Z',
+    status: 'Processing',
+    total: 65000,
+  },
+  {
+    id: 'ORD-004',
+    customerName: 'Fatima Aliyu',
+    customerEmail: 'fatima@example.com',
+    date: '2023-10-24T18:00:00Z',
+    status: 'Pending',
+    total: 35000,
+  },
+  {
+    id: 'ORD-005',
+    customerName: 'Emeka Nwosu',
+    customerEmail: 'emeka@example.com',
+    date: '2023-10-23T11:45:00Z',
+    status: 'Cancelled',
+    total: 40000,
   },
 ];

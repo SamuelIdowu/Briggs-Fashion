@@ -17,3 +17,12 @@ export interface Product {
     sizingInfo: string;
   }
 }
+
+export interface Order {
+  id: string;
+  customerName: string;
+  customerEmail: string;
+  date: string; // ISO date string
+  status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+  total: number;
+}

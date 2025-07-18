@@ -8,9 +8,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal, PlusCircle } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,16 +21,15 @@ import {
 import { products } from "@/lib/data";
 import { formatPrice } from "@/lib/utils";
 import type { Product } from "@/types";
+import { AddProductDialog } from "@/components/add-product-dialog";
+import { Button } from "@/components/ui/button";
 
 export default function AdminProductsPage() {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Products</h1>
-        <Button>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Add Product
-        </Button>
+        <AddProductDialog />
       </div>
       <Card>
         <CardHeader>

@@ -5,7 +5,6 @@ import { ProductGallery } from "@/components/product-gallery";
 import { formatPrice } from "@/lib/utils";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 import { Badge } from "@/components/ui/badge";
-import { RelatedProducts } from "@/components/related-products";
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -68,10 +67,6 @@ export default function ProductPage({ params }: ProductPageProps) {
             </AccordionItem>
           </Accordion>
         </div>
-      </div>
-
-      <div className="mt-16 sm:mt-24">
-        <RelatedProducts currentProduct={product} />
       </div>
     </div>
   );

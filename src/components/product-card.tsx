@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 import type { Product } from "@/types";
 import { formatPrice } from "@/lib/utils";
@@ -6,11 +5,12 @@ import { Badge } from "./ui/badge";
 
 interface ProductCardProps {
   product: Product;
+  onClick?: () => void;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, onClick }: ProductCardProps) {
   return (
-    <Link href={`/products/${product.id}`} className="group block">
+    <button onClick={onClick} className="group block w-full text-left">
       <div className="overflow-hidden rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-lg">
         <div className="relative aspect-[3/4] w-full overflow-hidden">
           <Image
@@ -32,6 +32,6 @@ export function ProductCard({ product }: ProductCardProps) {
           <p className="mt-2 text-xl font-bold text-foreground">{formatPrice(product.price)}</p>
         </div>
       </div>
-    </Link>
+    </button>
   );
 }

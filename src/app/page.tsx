@@ -1,16 +1,34 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/product-card';
+import { ProductModal } from '@/components/product-modal';
 import { products } from '@/lib/data';
+import type { Product } from '@/types';
 
 export default function Home() {
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
   const featuredProducts = products.slice(0, 4);
   const collections = [
     { name: 'Traditional Wear', href: '/products?category=traditional', image: 'https://placehold.co/600x400.png', hint: 'traditional clothing' },
     { name: 'Casual Wear', href: '/products?category=casual', image: 'https://placehold.co/600x400.png', hint: 'casual fashion' },
     { name: 'Custom Tailoring', href: '/products?category=custom', image: 'https://placehold.co/600x400.png', hint: 'tailor measuring' },
   ];
+
+  const handleProductClick = (product: Product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
 
   return (
     <div className="bg-background text-foreground">
@@ -66,7 +84,11 @@ export default function Home() {
           <h2 className="text-3xl font-bold tracking-tight text-center font-headline">Featured Products</h2>
           <div className="mt-10 grid grid-cols-1 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 sm:gap-x-6 lg:gap-x-8">
             {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard 
+                key={product.id} 
+                product={product} 
+                onClick={() => handleProductClick(product)}
+              />
             ))}
           </div>
           <div className="mt-12 text-center">
@@ -76,6 +98,13 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Product Modal */}
+      <ProductModal
+        product={selectedProduct}
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+      />
     </div>
   );
 }

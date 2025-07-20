@@ -1,64 +1,277 @@
 
-import { Mail, Phone } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { MessageCircle, Phone, MapPin, Clock, Mail } from 'lucide-react';
+import { siteSettings } from '@/lib/data';
 
 export default function ContactPage() {
+  const handleWhatsAppClick = (number: string, type: string) => {
+    const message = `Hello! I'd like to inquire about ${type} services at Briggs Fashion.`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${number.replace(/\D/g, '')}?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const handlePhoneClick = (number: string) => {
+    window.open(`tel:${number}`, '_self');
+  };
+
+  const handleEmailClick = () => {
+    window.open('mailto:info@briggsfashion.com', '_self');
+  };
+
   return (
-    <div className="bg-background">
-      <div className="container mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-foreground font-headline sm:text-5xl">Contact Us</h1>
-          <p className="mt-4 text-lg text-muted-foreground">We'd love to hear from you. Reach out with any questions or for custom orders.</p>
+    <div className="bg-background text-foreground">
+      {/* Hero Section */}
+      <section className="relative h-[40vh] min-h-[300px] w-full bg-black/40 text-white">
+        <div className="container mx-auto flex h-full flex-col items-center justify-center text-center">
+          <h1 className="text-4xl font-bold md:text-6xl drop-shadow-lg">Contact Us</h1>
+          <p className="mt-4 max-w-2xl text-lg md:text-xl drop-shadow-md">
+            Get in touch with our team for personalized service and expert guidance
+          </p>
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Contact Form */}
-          <div className="space-y-6">
-             <form className="space-y-4">
-               <div>
-                 <Label htmlFor="name">Full Name</Label>
-                 <Input id="name" type="text" placeholder="Your Name" />
-               </div>
-                <div>
-                 <Label htmlFor="email">Email Address</Label>
-                 <Input id="email" type="email" placeholder="you@example.com" />
-               </div>
-               <div>
-                  <Label htmlFor="message">Message</Label>
-                  <Textarea id="message" placeholder="Your message..." rows={6} />
-               </div>
-               <Button type="submit" className="w-full">Send Message</Button>
-             </form>
-          </div>
+      {/* Main Content */}
+      <section className="py-16 sm:py-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Contact Information */}
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-3xl font-bold tracking-tight mb-6">Get in Touch</h2>
+                <p className="text-muted-foreground text-lg">
+                  We're here to help you find the perfect fit and style. Reach out to us through 
+                  any of the channels below for personalized assistance.
+                </p>
+              </div>
 
-          {/* Contact Information */}
-          <div className="space-y-6 rounded-lg bg-secondary p-8">
-            <h2 className="text-2xl font-semibold">Our Information</h2>
-            <div className="space-y-4 text-muted-foreground">
-              <div className="flex items-start">
-                <Mail className="mt-1 h-5 w-5 shrink-0 text-primary" />
-                <div className="ml-4">
-                  <h3 className="font-semibold text-foreground">Email</h3>
-                  <a href="mailto:support@naijaluxe.com" className="hover:text-primary">support@naijaluxe.com</a>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <Phone className="mt-1 h-5 w-5 shrink-0 text-primary" />
-                <div className="ml-4">
-                  <h3 className="font-semibold text-foreground">Phone (WhatsApp)</h3>
-                  <a href="tel:+2348012345678" className="hover:text-primary">+234 801 234 5678</a>
-                </div>
-              </div>
+              {/* Business Hours */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Clock className="h-5 w-5" />
+                    Business Hours
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">{siteSettings.businessInfo.businessHours}</p>
+                </CardContent>
+              </Card>
+
+              {/* Address */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MapPin className="h-5 w-5" />
+                    Visit Our Workshop
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">{siteSettings.businessInfo.address}</p>
+                </CardContent>
+              </Card>
+
+              {/* Phone */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Phone className="h-5 w-5" />
+                    Call Us
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Button 
+                    variant="link" 
+                    className="p-0 h-auto text-muted-foreground hover:text-foreground"
+                    onClick={() => handlePhoneClick(siteSettings.businessInfo.phone)}
+                  >
+                    {siteSettings.businessInfo.phone}
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Email */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Mail className="h-5 w-5" />
+                    Email Us
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Button 
+                    variant="link" 
+                    className="p-0 h-auto text-muted-foreground hover:text-foreground"
+                    onClick={handleEmailClick}
+                  >
+                    info@briggsfashion.com
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
-            <p className="text-sm text-muted-foreground">
-              For custom tailoring inquiries, please reach out via WhatsApp for the quickest response. We look forward to crafting your unique piece.
-            </p>
+
+            {/* WhatsApp Contact Options */}
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-2xl font-bold tracking-tight mb-4">WhatsApp Services</h3>
+                <p className="text-muted-foreground mb-6">
+                  Connect with us on WhatsApp for quick responses and personalized service. 
+                  We have dedicated numbers for different services.
+                </p>
+              </div>
+
+              {/* Sales WhatsApp */}
+              <Card className="border-primary/20">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge variant="default" className="bg-green-600">Sales</Badge>
+                        <h4 className="font-semibold">Ready-Made Products</h4>
+                      </div>
+                      <p className="text-muted-foreground text-sm mb-4">
+                        Inquire about our ready-made collection, check availability, 
+                        and get quick answers about sizes and colors.
+                      </p>
+                      <p className="text-sm font-medium">{siteSettings.businessInfo.whatsappNumbers.sales}</p>
+                    </div>
+                    <Button
+                      onClick={() => handleWhatsAppClick(siteSettings.businessInfo.whatsappNumbers.sales, 'sales')}
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      <MessageCircle className="mr-2 h-4 w-4" />
+                      Chat Now
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Custom Tailoring WhatsApp */}
+              <Card className="border-primary/20">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge variant="secondary">Custom</Badge>
+                        <h4 className="font-semibold">Custom Tailoring</h4>
+                      </div>
+                      <p className="text-muted-foreground text-sm mb-4">
+                        Schedule consultations, discuss custom designs, and get expert 
+                        advice from our master tailors.
+                      </p>
+                      <p className="text-sm font-medium">{siteSettings.businessInfo.whatsappNumbers.custom}</p>
+                    </div>
+                    <Button
+                      onClick={() => handleWhatsAppClick(siteSettings.businessInfo.whatsappNumbers.custom, 'custom tailoring')}
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      <MessageCircle className="mr-2 h-4 w-4" />
+                      Chat Now
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Customer Support WhatsApp */}
+              <Card className="border-primary/20">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge variant="outline">Support</Badge>
+                        <h4 className="font-semibold">Customer Support</h4>
+                      </div>
+                      <p className="text-muted-foreground text-sm mb-4">
+                        Get help with orders, sizing questions, care instructions, 
+                        and any other customer service needs.
+                      </p>
+                      <p className="text-sm font-medium">{siteSettings.businessInfo.whatsappNumbers.support}</p>
+                    </div>
+                    <Button
+                      onClick={() => handleWhatsAppClick(siteSettings.businessInfo.whatsappNumbers.support, 'customer support')}
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      <MessageCircle className="mr-2 h-4 w-4" />
+                      Chat Now
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="bg-secondary py-16 sm:py-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold tracking-tight text-center mb-12">Frequently Asked Questions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="font-semibold mb-2">How long does custom tailoring take?</h3>
+                <p className="text-muted-foreground text-sm">
+                  Custom tailoring typically takes 2-4 weeks depending on complexity. 
+                  We'll provide a specific timeline during consultation.
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="font-semibold mb-2">Do you offer alterations?</h3>
+                <p className="text-muted-foreground text-sm">
+                  Yes, we offer alteration services for both ready-made and custom pieces. 
+                  Contact us for pricing and availability.
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="font-semibold mb-2">What payment methods do you accept?</h3>
+                <p className="text-muted-foreground text-sm">
+                  We accept cash, bank transfers, and mobile money payments. 
+                  Payment plans are available for custom orders.
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="font-semibold mb-2">Do you ship outside Lagos?</h3>
+                <p className="text-muted-foreground text-sm">
+                  Yes, we offer nationwide shipping. Shipping costs and delivery times 
+                  vary by location.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="bg-primary text-primary-foreground py-16 sm:py-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold tracking-tight mb-4">Ready to Get Started?</h2>
+          <p className="text-lg mb-8 max-w-2xl mx-auto">
+            Whether you're looking for ready-made pieces or custom tailoring, 
+            we're here to help you achieve the perfect look.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              size="lg" 
+              variant="secondary"
+              onClick={() => handleWhatsAppClick(siteSettings.businessInfo.whatsappNumbers.sales, 'general inquiry')}
+            >
+              <MessageCircle className="mr-2 h-4 w-4" />
+              Start WhatsApp Chat
+            </Button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

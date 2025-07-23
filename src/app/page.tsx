@@ -2,18 +2,23 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/product-card';
 import { ProductModal } from '@/components/product-modal';
-import { products } from '@/lib/data';
 import type { Product } from '@/types';
 
 export default function Home() {
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  const featuredProducts = products.slice(0, 4);
+  useEffect(() => {
+    fetch('/api/products?limit=4')
+      .then(res => res.json())
+      .then(data => setFeaturedProducts(data.products));
+  }, []);
+
   const collections = [
     { name: 'Traditional Wear', href: '/products?category=traditional', image: 'https://placehold.co/600x400.png', hint: 'traditional clothing' },
     { name: 'Casual Wear', href: '/products?category=casual', image: 'https://placehold.co/600x400.png', hint: 'casual fashion' },

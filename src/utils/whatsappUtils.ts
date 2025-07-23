@@ -124,7 +124,7 @@ export function createProductShareUrl(
   productName: string,
   productUrl: string
 ): string {
-  const message = `Check out this amazing product from Briggs Fashion: ${productName}\n\n${productUrl}`;
+  const message = `Check out this amazing product from Brigg's Fashion and Store: ${productName}\n\n${productUrl}`;
   const encodedMessage = encodeURIComponent(message);
   const number = WhatsAppService.getNumber('sales').replace(/\D/g, '');
   

@@ -1,4 +1,4 @@
-# **App Name**: Naija Luxe
+# **App Name**: Brigg's Fashion and Store
 
 ## Core Features:
 

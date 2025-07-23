@@ -1,6 +1,4 @@
 import { notFound } from "next/navigation";
-import { products } from "@/lib/data";
-import type { Product } from "@/types";
 import { ProductGallery } from "@/components/product-gallery";
 import { formatPrice } from "@/lib/utils";
 import { WhatsAppButton } from "@/components/whatsapp-button";
@@ -9,17 +7,13 @@ import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface ProductPageProps {
-  params: {
-    id: string;
-  };
+  params: { id: string };
 }
 
-export default function ProductPage({ params }: ProductPageProps) {
-  const product = products.find((p) => p.id === params.id) as Product | undefined;
-
-  if (!product) {
-    notFound();
-  }
+export default async function ProductPage({ params }: ProductPageProps) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/products/${params.id}`, { cache: 'no-store' });
+  if (!res.ok) notFound();
+  const { product } = await res.json();
 
   return (
     <div className="container mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-16">

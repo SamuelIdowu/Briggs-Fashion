@@ -1,12 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { X, MessageCircle } from 'lucide-react';
+import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { ImageCarousel } from '@/components/image-carousel';
 import { WhatsAppButton } from '@/components/whatsapp-button';
 import { formatPrice, getCategoryDisplayName, getTypeDisplayName } from '@/utils/helpers';
 import { createProductInquiry } from '@/utils/whatsappUtils';
@@ -19,26 +18,19 @@ interface ProductModalProps {
 }
 
 export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
-  const [selectedSize, setSelectedSize] = useState('');
-  const [selectedColor, setSelectedColor] = useState('');
-
   if (!product) return null;
 
   const handleWhatsAppInquiry = () => {
     const message = createProductInquiry(
       product.name,
-      product.type,
-      selectedSize || undefined,
-      selectedColor || undefined
+      product.type
     );
-    
-    // The WhatsAppButton component will handle the actual sending
     return message;
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
         <div className="relative">
           {/* Close button */}
           <Button
@@ -50,15 +42,13 @@ export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
             <X className="h-4 w-4" />
           </Button>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-            {/* Image Carousel */}
-            <div className="h-96 lg:h-full">
-              <ImageCarousel
-                images={product.images}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+            {/* Single Product Image */}
+            <div className="h-80 md:h-full flex items-center justify-center bg-gray-100">
+              <img
+                src={product.images[0]}
                 alt={product.name}
-                className="h-full"
-                showArrows={true}
-                showDots={true}
+                className="object-contain h-full w-full rounded"
               />
             </div>
 
@@ -84,63 +74,6 @@ export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
               <div>
                 <h3 className="font-semibold mb-2">Description</h3>
                 <p className="text-muted-foreground">{product.description}</p>
-              </div>
-
-              {/* Size Selection */}
-              {product.variations.sizes.length > 0 && (
-                <div>
-                  <h3 className="font-semibold mb-2">Size</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {product.variations.sizes.map((size) => (
-                      <Button
-                        key={size}
-                        variant={selectedSize === size ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setSelectedSize(size)}
-                        className="min-w-[60px]"
-                      >
-                        {size}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Color Selection */}
-              {product.variations.colors.length > 0 && (
-                <div>
-                  <h3 className="font-semibold mb-2">Color</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {product.variations.colors.map((color) => (
-                      <Button
-                        key={color}
-                        variant={selectedColor === color ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setSelectedColor(color)}
-                      >
-                        {color}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <Separator />
-
-              {/* Product Details */}
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-semibold mb-1">Material</h3>
-                  <p className="text-sm text-muted-foreground">{product.details.materialComposition}</p>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1">Care Instructions</h3>
-                  <p className="text-sm text-muted-foreground">{product.details.careInstructions}</p>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1">Sizing Information</h3>
-                  <p className="text-sm text-muted-foreground">{product.details.sizingInfo}</p>
-                </div>
               </div>
 
               <Separator />

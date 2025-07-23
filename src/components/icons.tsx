@@ -2,11 +2,11 @@ import type { SVGProps } from "react";
 
 export const Icons = {
   logo: (props: SVGProps<SVGSVGElement>) => (
-    <svg width="150" height="40" viewBox="0 0 150 40" xmlns="http://www.w3.org/2000/svg" {...props}>
-      <title>Naija Luxe</title>
-      <text x="0" y="30" fontFamily="Inter, sans-serif" fontSize="28" fontWeight="600" fill="currentColor">
-        Naija
-        <tspan fontWeight="300" letterSpacing="1" className="opacity-90"> Luxe</tspan>
+    <svg width="420" height="40" viewBox="0 0 420 40" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <title>Brigg's Fashion and Store</title>
+      <text x="30" y="30" fontFamily="Inter, sans-serif" fontSize="26" fontWeight="600" fill="currentColor">
+        Brigg's
+        <tspan fontWeight="300" letterSpacing="1" className="opacity-90"> Fashion &amp; Store</tspan>
       </text>
     </svg>
   ),

@@ -1,21 +1,17 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Toaster } from '@/components/ui/toaster';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { WhatsAppFAB } from '@/components/whatsapp-fab';
-import { Analytics } from '@/components/analytics';
-import { StructuredData } from '@/components/structured-data';
 import { AuthProvider } from '@/contexts/auth-context';
 import { ProductProvider } from '@/contexts/product-context';
 
 export const metadata: Metadata = {
-  title: 'Briggs Fashion - Premium Nigerian Menswear',
+  title: 'Brigg\'s Fashion and Store - Premium Nigerian Menswear',
   description: 'Experience unparalleled craftsmanship with our exclusive collection of traditional and modern menswear. Custom tailoring and ready-made pieces.',
   keywords: ['nigerian fashion', 'menswear', 'traditional wear', 'custom tailoring', 'african fashion', 'agbada', 'dashiki', 'kaftan'],
-  authors: [{ name: 'Briggs Fashion' }],
-  creator: 'Briggs Fashion',
-  publisher: 'Briggs Fashion',
+  authors: [{ name: 'Brigg\'s Fashion and Store' }],
+  creator: 'Brigg\'s Fashion and Store',
+  publisher: 'Brigg\'s Fashion and Store',
   formatDetection: {
     email: false,
     address: false,
@@ -26,16 +22,16 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'Briggs Fashion - Premium Nigerian Menswear',
+    title: 'Brigg\'s Fashion and Store - Premium Nigerian Menswear',
     description: 'Experience unparalleled craftsmanship with our exclusive collection of traditional and modern menswear.',
     url: 'https://briggsfashion.com',
-    siteName: 'Briggs Fashion',
+    siteName: 'Brigg\'s Fashion and Store',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Briggs Fashion - Premium Nigerian Menswear',
+        alt: 'Brigg\'s Fashion and Store - Premium Nigerian Menswear',
       },
     ],
     locale: 'en_US',
@@ -43,7 +39,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Briggs Fashion - Premium Nigerian Menswear',
+    title: 'Brigg\'s Fashion and Store - Premium Nigerian Menswear',
     description: 'Experience unparalleled craftsmanship with our exclusive collection of traditional and modern menswear.',
     images: ['/og-image.jpg'],
   },
@@ -80,11 +76,6 @@ export default function RootLayout({
               <main className="flex-1">{children}</main>
               <Footer />
             </div>
-            <WhatsAppFAB />
-            <Toaster />
-            <Analytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
-            <StructuredData type="website" data={{}} />
-            <StructuredData type="organization" data={{}} />
           </ProductProvider>
         </AuthProvider>
       </body>

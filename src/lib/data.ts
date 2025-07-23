@@ -292,7 +292,7 @@ export const collections: Collection[] = [
 
 export const siteSettings: SiteSettings = {
   businessInfo: {
-    name: 'Briggs Fashion',
+    name: 'Brigg\'s Fashion and Store',
     address: '123 Fashion Street, Lagos, Nigeria',
     phone: '+234 801 234 5678',
     whatsappNumbers: {

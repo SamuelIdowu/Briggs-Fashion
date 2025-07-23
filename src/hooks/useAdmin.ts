@@ -29,38 +29,6 @@ export function useAdmin() {
   // Check if user is admin
   const isAdmin = isAuthenticated && user?.role === 'admin';
 
-  // Get admin dashboard data
-  const getDashboardData = useCallback(async (): Promise<AdminData | null> => {
-    if (!isAdmin) {
-      setError('Access denied. Admin privileges required.');
-      return null;
-    }
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      const token = localStorage.getItem('auth_token');
-      const response = await fetch('/api/admin/dashboard', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch dashboard data');
-      }
-
-      return await response.json();
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to fetch dashboard data';
-      setError(message);
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }, [isAdmin]);
-
   // Create new product
   const createProduct = useCallback(async (productData: Partial<Product>): Promise<boolean> => {
     if (!isAdmin) {
@@ -287,7 +255,6 @@ export function useAdmin() {
     isAdmin,
     loading,
     error,
-    getDashboardData,
     createProduct,
     updateProduct,
     deleteProduct,

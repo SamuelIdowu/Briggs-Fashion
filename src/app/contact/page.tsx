@@ -10,7 +10,7 @@ import { siteSettings } from '@/lib/data';
 
 export default function ContactPage() {
   const handleWhatsAppClick = (number: string, type: string) => {
-    const message = `Hello! I'd like to inquire about ${type} services at Briggs Fashion.`;
+    const message = `Hello! I'd like to inquire about ${type} services at Brigg's Fashion and Store.`;
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${number.replace(/\D/g, '')}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
@@ -42,13 +42,13 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Information */}
             <div className="space-y-8">
-              <div>
+               <div>
                 <h2 className="text-3xl font-bold tracking-tight mb-6">Get in Touch</h2>
                 <p className="text-muted-foreground text-lg">
                   We're here to help you find the perfect fit and style. Reach out to us through 
                   any of the channels below for personalized assistance.
                 </p>
-              </div>
+               </div>
 
               {/* Business Hours */}
               <Card>
@@ -113,7 +113,7 @@ export default function ContactPage() {
                   </Button>
                 </CardContent>
               </Card>
-            </div>
+          </div>
 
             {/* WhatsApp Contact Options */}
             <div className="space-y-6">
@@ -202,9 +202,9 @@ export default function ContactPage() {
                   </div>
                 </CardContent>
               </Card>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
       </section>
 
       {/* FAQ Section */}
@@ -269,8 +269,8 @@ export default function ContactPage() {
               <MessageCircle className="mr-2 h-4 w-4" />
               Start WhatsApp Chat
             </Button>
-          </div>
         </div>
+      </div>
       </section>
     </div>
   );

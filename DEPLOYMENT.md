@@ -1,29 +1,103 @@
-# Deployment Guide - Briggs Fashion E-commerce
+# Briggs Fashion - Deployment Guide
 
-## Prerequisites
+## 📊 Project Overview
 
-- Node.js 18+ installed
+This document provides deployment instructions for the Briggs Fashion e-commerce platform.
+
+## 🛠 Tech Stack
+
+- **Frontend**: Next.js 15 with App Router
+- **Backend**: Node.js with Express.js (API Routes)
+- **Database**: MongoDB with Mongoose
+- **Authentication**: JWT (JSON Web Tokens)
+- **Styling**: Tailwind CSS
+- **UI Components**: Radix UI
+- **State Management**: React Context API
+- **Deployment**: Vercel (recommended)
+
+## 📋 Prerequisites
+
+- Node.js 18+
 - MongoDB Atlas account (for production)
-- Vercel account (recommended) or other hosting platform
+- Vercel account (for deployment)
 
-## Environment Setup
+## 🚀 Quick Start
 
-1. Copy the environment example file:
+### 1. Clone the Repository
 
-   ```bash
-   cp env.example .env.local
-   ```
+```bash
+git clone <repository-url>
+cd Briggs-Fashion
+```
 
-2. Update `.env.local` with your production values:
-   - `MONGODB_URI_PROD`: Your MongoDB Atlas connection string
-   - `JWT_SECRET`: A strong secret key for JWT tokens
-   - `NEXT_PUBLIC_GA_ID`: Your Google Analytics 4 ID
-   - `CLOUDINARY_*`: Cloudinary credentials for image uploads
-   - `NEXT_PUBLIC_SITE_URL`: Your production domain
+### 2. Install Dependencies
 
-## Deployment Options
+```bash
+npm install
+```
 
-### Option 1: Vercel (Recommended)
+### 3. Environment Setup
+
+```bash
+cp env.example .env.local
+```
+
+Update `.env.local` with your configuration:
+
+```env
+# Database
+MONGODB_URI=mongodb://localhost:27017/briggs-fashion
+MONGODB_URI_PROD=mongodb+srv://your-username:your-password@your-cluster.mongodb.net/briggs-fashion
+
+# Authentication
+JWT_SECRET=your-super-secret-jwt-key
+JWT_EXPIRES_IN=24h
+
+# Site Configuration
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_SITE_NAME=Brigg's Fashion and Store
+NEXT_PUBLIC_WHATSAPP_SALES=+2341234567890
+```
+
+### 4. Database Setup
+
+#### Option A: Local MongoDB
+
+```bash
+# Install MongoDB locally or use Docker
+docker run -d -p 27017:27017 --name mongodb mongo:latest
+```
+
+#### Option B: MongoDB Atlas
+
+1. Create a MongoDB Atlas cluster
+2. Get your connection string
+3. Update `MONGODB_URI_PROD` in `.env.local`
+
+### 5. Seed Database
+
+```bash
+npm run seed
+```
+
+This will create:
+
+- Admin user (admin@briggsfashion.com / admin123)
+- Sample products
+- Collections
+- Site settings
+
+### 6. Run Development Server
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
 
 1. **Install Vercel CLI:**
 
@@ -31,151 +105,72 @@
    npm i -g vercel
    ```
 
-2. **Deploy to Vercel:**
+2. **Deploy:**
 
    ```bash
    vercel
    ```
 
-3. **Set Environment Variables in Vercel Dashboard:**
+3. **Set Environment Variables:**
 
-   - Go to your project settings
-   - Add all environment variables from `.env.local`
+   - Go to Vercel dashboard
+   - Add all variables from `.env.local`
 
 4. **Connect Custom Domain (Optional):**
    - Add your domain in Vercel dashboard
    - Update DNS records as instructed
 
-### Option 2: Docker Deployment
+## 🔐 Admin Access
 
-1. **Build and run with Docker Compose:**
+Default admin credentials:
 
-   ```bash
-   docker-compose up --build
-   ```
+- **Email**: admin@briggsfashion.com
+- **Password**: admin123
 
-2. **For production with external MongoDB:**
-   ```bash
-   docker build -t briggs-fashion .
-   docker run -p 3000:3000 --env-file .env.local briggs-fashion
-   ```
+**Important**: Change these credentials immediately after first login.
 
-### Option 3: Manual Server Deployment
+## 📱 WhatsApp Integration
 
-1. **Build the application:**
+The platform integrates WhatsApp for customer communication:
 
-   ```bash
-   npm run build
-   ```
+- **Product Inquiry**: Pre-populated messages with product details
+- **Floating Action Button**: General inquiries
+- **Multiple Numbers**: Sales, custom orders, customer service
 
-2. **Start the production server:**
-   ```bash
-   npm start
-   ```
+Configure WhatsApp numbers in environment variables:
 
-## Database Setup
+```env
+NEXT_PUBLIC_WHATSAPP_SALES=+2341234567890
+NEXT_PUBLIC_WHATSAPP_CUSTOM=+2341234567891
+NEXT_PUBLIC_WHATSAPP_SUPPORT=+2341234567892
+```
 
-### MongoDB Atlas (Production)
+## 🎨 Customization
 
-1. Create a MongoDB Atlas cluster
-2. Get your connection string
-3. Update `MONGODB_URI_PROD` in environment variables
-4. The application will automatically create collections and indexes
+### Theme Colors
 
-### Local MongoDB (Development)
+The platform uses a gold and black theme. Update colors in:
 
-1. Install MongoDB locally or use Docker:
+- `tailwind.config.ts`
+- `src/app/globals.css`
 
-   ```bash
-   docker run -d -p 27017:27017 --name mongodb mongo:latest
-   ```
+### Content Management
 
-2. Update `MONGODB_URI` in `.env.local`
+Use the admin panel to:
 
-## Initial Setup
+- Add/edit products
+- Manage collections
+- Update site settings
 
-After deployment, the application will automatically:
+## 🔒 Security
 
-1. Create the admin user (if not exists)
-2. Initialize site settings
-3. Create necessary database indexes
+- JWT-based authentication
+- Password hashing with bcrypt
+- Input validation
+- CORS protection
+- Security headers
 
-### Admin Access
-
-Default admin credentials (change in production):
-
-- Email: `admin@briggsfashion.com`
-- Password: `admin123`
-
-**Important:** Change these credentials immediately after first login.
-
-## Performance Optimization
-
-### Image Optimization
-
-1. Set up Cloudinary for image storage
-2. Configure image transformations
-3. Use Next.js Image component for optimization
-
-### Caching
-
-1. Enable Vercel Edge Caching
-2. Configure CDN for static assets
-3. Implement Redis for session storage (optional)
-
-## Monitoring & Analytics
-
-1. **Google Analytics 4:**
-
-   - Set up GA4 property
-   - Add tracking ID to environment variables
-
-2. **Error Monitoring:**
-
-   - Consider adding Sentry for error tracking
-   - Monitor Vercel function logs
-
-3. **Performance Monitoring:**
-   - Use Vercel Analytics
-   - Monitor Core Web Vitals
-
-## Security Checklist
-
-- [ ] Change default admin credentials
-- [ ] Use strong JWT secret
-- [ ] Enable HTTPS (automatic with Vercel)
-- [ ] Set up proper CORS headers
-- [ ] Configure rate limiting
-- [ ] Regular security updates
-
-## Backup Strategy
-
-1. **Database Backups:**
-
-   - MongoDB Atlas provides automatic backups
-   - Set up manual backup schedule
-
-2. **Code Backups:**
-   - Use Git for version control
-   - Regular commits and pushes
-
-## Maintenance
-
-1. **Regular Updates:**
-
-   - Keep dependencies updated
-   - Monitor for security vulnerabilities
-
-2. **Performance Audits:**
-
-   - Monthly Lighthouse audits
-   - Monitor Core Web Vitals
-
-3. **Content Updates:**
-   - Use admin panel for content management
-   - Regular product updates
-
-## Troubleshooting
+## 🐛 Troubleshooting
 
 ### Common Issues
 
@@ -186,17 +181,36 @@ Default admin credentials (change in production):
 
 2. **Build Errors:**
 
-   - Check Node.js version compatibility
+   - Check Node.js version (18+)
    - Verify all dependencies installed
 
 3. **Environment Variables:**
    - Ensure all required variables are set
-   - Check for typos in variable names
+   - Check for typos
 
 ### Support
 
-For deployment issues, check:
+For issues, check:
 
-- Vercel documentation
-- Next.js deployment guide
-- MongoDB Atlas documentation
+- [Next.js Documentation](https://nextjs.org/docs)
+- [MongoDB Atlas Documentation](https://docs.atlas.mongodb.com)
+- [Vercel Documentation](https://vercel.com/docs)
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📞 Support
+
+For support, email support@briggsfashion.com or create an issue in the repository.
+
+---
+
+Built with ❤️ for Nigerian Fashion

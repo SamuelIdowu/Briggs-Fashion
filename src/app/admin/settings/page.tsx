@@ -184,7 +184,7 @@ export default function AdminSettingsPage() {
                     id="businessName"
                     value={settings.businessInfo.name}
                     onChange={(e) => updateBusinessInfo('name', e.target.value)}
-                    placeholder="Briggs Fashion"
+                    placeholder="Brigg's Fashion and Store"
                   />
                 </div>
                 <div className="space-y-2">

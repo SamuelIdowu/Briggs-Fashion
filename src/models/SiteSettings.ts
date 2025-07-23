@@ -36,7 +36,7 @@ const siteSettingsSchema = new Schema<ISiteSettings>({
     name: {
       type: String,
       required: [true, 'Business name is required'],
-      default: 'Briggs Fashion',
+      default: 'Brigg\'s Fashion and Store',
     },
     address: {
       type: String,
@@ -82,7 +82,7 @@ const siteSettingsSchema = new Schema<ISiteSettings>({
   seo: {
     siteTitle: {
       type: String,
-      default: 'Briggs Fashion - Nigerian Fashion E-commerce',
+      default: 'Brigg\'s Fashion and Store - Nigerian Fashion E-commerce',
     },
     siteDescription: {
       type: String,

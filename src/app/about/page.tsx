@@ -13,7 +13,7 @@ export default function AboutPage() {
       <section className="relative h-[50vh] min-h-[400px] w-full bg-black/40 text-white">
         <Image
           src="https://placehold.co/1600x900.png"
-          alt="Briggs Fashion workshop"
+          alt="Brigg's Fashion and Store workshop"
           data-ai-hint="tailor workshop"
           fill
           className="object-cover -z-10"
@@ -35,7 +35,7 @@ export default function AboutPage() {
               <h2 className="text-3xl font-bold tracking-tight mb-6">The Essence of Nigerian Elegance</h2>
               <div className="space-y-4 text-muted-foreground">
                 <p>
-                  Founded in 1995, Briggs Fashion has been at the forefront of Nigerian fashion, 
+                  Founded in 1995, Brigg's Fashion and Store has been at the forefront of Nigerian fashion, 
                   blending traditional craftsmanship with contemporary design. Our journey began 
                   with a simple vision: to create clothing that celebrates Nigerian culture while 
                   meeting the demands of modern life.

@@ -1,12 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ProductCard } from '@/components/product-card';
 import { ProductModal } from '@/components/product-modal';
-import { SearchBar } from '@/components/search-bar';
 import { FilterSidebar } from '@/components/filter-sidebar';
 import { Button } from '@/components/ui/button';
-import { Pagination } from '@/components/ui/pagination';
 import { useProducts } from '@/hooks/useProducts';
 import { useModal } from '@/hooks/useModal';
 import { Filter, Grid, List } from 'lucide-react';
@@ -36,6 +34,11 @@ export function ProductList({
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>(layout);
   const [showFilterSidebar, setShowFilterSidebar] = useState(false);
+  const [activeFilters, setActiveFilters] = useState({
+    categories: [],
+    types: [],
+    ...initialFilters,
+  });
   
   const { isOpen: isModalOpen, open: openModal, close: closeModal } = useModal();
   
@@ -49,6 +52,12 @@ export function ProductList({
     goToPage,
   } = useProducts(initialFilters);
 
+  const availableFilters = useMemo(() => {
+    const categories = [...new Set(products.map(p => p.category).filter(Boolean))] as string[];
+    const types = [...new Set(products.map(p => p.type).filter(Boolean))] as string[];
+    return { categories, types };
+  }, [products]);
+
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
     openModal();
@@ -58,11 +67,16 @@ export function ProductList({
     updateFilters({ search: query, page: 1 });
   };
 
-  const handleFilterChange = (filters: any) => {
-    updateFilters({ ...filters, page: 1 });
+  const handleFilterChange = (newFilters: any) => {
+    setActiveFilters({
+      categories: newFilters.categories || [],
+      types: newFilters.types || [],
+    });
+    updateFilters({ ...newFilters, page: 1 });
   };
 
   const handleClearFilters = () => {
+    setActiveFilters({ categories: [], types: [] });
     clearFilters();
   };
 
@@ -93,123 +107,136 @@ export function ProductList({
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           {showSearch && (
             <div className="flex-1 max-w-md">
-              <SearchBar onSearch={handleSearch} />
+              <input
+                type="text"
+                placeholder="Search products..."
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                onChange={(e) => handleSearch(e.target.value)}
+              />
             </div>
           )}
           
           <div className="flex items-center gap-2">
-            {/* Filter Toggle for Mobile */}
+            {/* View Mode Toggle */}
+            <div className="flex items-center bg-gray-100 rounded-lg p-1">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-2 rounded-md transition-colors ${
+                  viewMode === 'grid'
+                    ? 'bg-white text-primary shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <Grid size={18} />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-2 rounded-md transition-colors ${
+                  viewMode === 'list'
+                    ? 'bg-white text-primary shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <List size={18} />
+              </button>
+            </div>
+
+            {/* Filter Toggle */}
             {showFilters && (
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setShowFilterSidebar(true)}
-                className="sm:hidden"
+                className="flex items-center gap-2"
               >
-                <Filter className="h-4 w-4 mr-2" />
+                <Filter size={16} />
                 Filters
               </Button>
             )}
-            
-            {/* View Mode Toggle */}
-            <div className="flex border rounded-md">
-              <Button
-                variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('grid')}
-                className="rounded-r-none"
-              >
-                <Grid className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'list' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('list')}
-                className="rounded-l-none"
-              >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
           </div>
         </div>
-
-        {/* Results Summary */}
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <span>
-            {pagination ? `${pagination.total} products found` : `${products.length} products`}
-          </span>
-          {showFilters && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleClearFilters}
-              className="text-xs"
-            >
-              Clear Filters
-            </Button>
-          )}
-        </div>
       </div>
+
+      {/* Products Grid/List */}
+      <div className="mb-8">
+        {viewMode === 'grid' ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onClick={() => handleProductClick(product)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {products.map((product) => (
+              <div
+                key={product.id}
+                className="flex items-center gap-4 p-4 border rounded-lg hover:shadow-md transition-shadow cursor-pointer"
+                onClick={() => handleProductClick(product)}
+              >
+                <img
+                  src={product.images[0]}
+                  alt={product.name}
+                  className="w-20 h-20 object-cover rounded-lg"
+                />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-lg">{product.name}</h3>
+                  <p className="text-gray-600 text-sm">{product.description}</p>
+                  <p className="text-primary font-semibold">₦{product.price.toLocaleString()}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Pagination */}
+      {showPagination && pagination && pagination.totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => goToPage(pagination.page - 1)}
+            disabled={!pagination.hasPrevPage}
+          >
+            Previous
+          </Button>
+          
+          <span className="text-sm text-gray-600">
+            Page {pagination.page} of {pagination.totalPages}
+          </span>
+          
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => goToPage(pagination.page + 1)}
+            disabled={!pagination.hasNextPage}
+          >
+            Next
+          </Button>
+        </div>
+      )}
 
       {/* Filter Sidebar */}
       {showFilters && (
         <FilterSidebar
           isOpen={showFilterSidebar}
           onClose={() => setShowFilterSidebar(false)}
+          filters={availableFilters}
+          selectedFilters={activeFilters}
           onFilterChange={handleFilterChange}
         />
       )}
 
-      {/* Products Grid/List */}
-      {products.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground mb-4">No products found</p>
-          <Button onClick={handleClearFilters}>
-            Clear Filters
-          </Button>
-        </div>
-      ) : (
-        <>
-          <div
-            className={
-              viewMode === 'grid'
-                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
-                : 'space-y-4'
-            }
-          >
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onClick={() => handleProductClick(product)}
-                layout={viewMode}
-              />
-            ))}
-          </div>
-
-          {/* Pagination */}
-          {showPagination && pagination && pagination.totalPages > 1 && (
-            <div className="mt-8 flex justify-center">
-              <Pagination
-                currentPage={pagination.page}
-                totalPages={pagination.totalPages}
-                onPageChange={goToPage}
-                hasNextPage={pagination.hasNextPage}
-                hasPrevPage={pagination.hasPrevPage}
-              />
-            </div>
-          )}
-        </>
-      )}
-
       {/* Product Modal */}
-      {selectedProduct && (
-        <ProductModal
-          product={selectedProduct}
-          isOpen={isModalOpen}
-          onClose={closeModal}
-        />
-      )}
+      <ProductModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        product={selectedProduct}
+      />
     </div>
   );
 } 

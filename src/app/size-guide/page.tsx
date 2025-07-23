@@ -1,14 +1,47 @@
 'use client';
 
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MessageCircle, Ruler, Users } from 'lucide-react';
 import Link from 'next/link';
 import { siteSettings } from '@/lib/data';
+
+// Minimal Tabs implementation
+function Tabs({ tabs, defaultTab, children, className = '' }: {
+  tabs: { value: string; label: string }[];
+  defaultTab: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const [active, setActive] = useState(defaultTab);
+  return (
+    <div className={className}>
+      <div className="flex border-b mb-6">
+        {tabs.map(tab => (
+          <button
+            key={tab.value}
+            className={`px-4 py-2 font-medium border-b-2 transition-colors ${active === tab.value ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-primary'}`}
+            onClick={() => setActive(tab.value)}
+            type="button"
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+      {Array.isArray(children)
+        ? children.filter((child: any) => child.props.value === active)
+        : null}
+    </div>
+  );
+}
+
+function TabPanel({ value, children }: { value: string; children: React.ReactNode }) {
+  return <div>{children}</div>;
+}
 
 export default function SizeGuidePage() {
   const handleWhatsAppClick = () => {
@@ -44,13 +77,15 @@ export default function SizeGuidePage() {
             </div>
 
             {/* Size Guide Tabs */}
-            <Tabs defaultValue="ready-made" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="ready-made">Ready-Made Sizes</TabsTrigger>
-                <TabsTrigger value="custom">Custom Measurements</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="ready-made" className="space-y-6">
+            <Tabs
+              tabs={[
+                { value: 'ready-made', label: 'Ready-Made Sizes' },
+                { value: 'custom', label: 'Custom Measurements' },
+              ]}
+              defaultTab="ready-made"
+              className="w-full"
+            >
+              <TabPanel value="ready-made">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -168,9 +203,9 @@ export default function SizeGuidePage() {
                     </div>
                   </CardContent>
                 </Card>
-              </TabsContent>
+              </TabPanel>
 
-              <TabsContent value="custom" className="space-y-6">
+              <TabPanel value="custom">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -238,7 +273,7 @@ export default function SizeGuidePage() {
                     </div>
                   </CardContent>
                 </Card>
-              </TabsContent>
+              </TabPanel>
             </Tabs>
 
             {/* Tips Section */}

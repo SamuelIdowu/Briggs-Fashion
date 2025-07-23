@@ -43,7 +43,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t border-foreground/10 pt-8 text-center text-sm text-foreground/60">
-          <p>&copy; {new Date().getFullYear()} Naija Luxe. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Brigg's Fashion and Store. All rights reserved.</p>
         </div>
       </div>
     </footer>

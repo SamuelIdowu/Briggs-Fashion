@@ -19,7 +19,7 @@ export const WHATSAPP_NUMBERS = {
 
 // Business Constants
 export const BUSINESS_INFO = {
-  name: 'Briggs Fashion',
+  name: 'Brigg\'s Fashion and Store',
   address: '123 Fashion Street, Lagos, Nigeria',
   phone: '+234 801 234 5678',
   email: 'info@briggsfashion.com',
@@ -28,7 +28,7 @@ export const BUSINESS_INFO = {
 
 // SEO Constants
 export const DEFAULT_SEO = {
-  title: 'Briggs Fashion - Premium Nigerian Menswear',
+  title: 'Brigg\'s Fashion and Store - Premium Nigerian Menswear',
   description: 'Experience unparalleled craftsmanship with our exclusive collection of traditional and modern menswear.',
   keywords: ['nigerian fashion', 'menswear', 'traditional wear', 'custom tailoring', 'african fashion'],
   ogImage: '/og-image.jpg',

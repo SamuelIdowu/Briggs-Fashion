@@ -1,35 +1,70 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { ProductService, ProductFilters, ProductResponse } from '@/services/productService';
 import type { Product } from '@/types';
 
 export function useProducts(initialFilters: ProductFilters = {}) {
+  const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<ProductResponse['pagination'] | null>(null);
   const [filters, setFilters] = useState<ProductFilters>(initialFilters);
 
+  // Get current filters from URL params
+  const getCurrentFilters = useCallback((): ProductFilters => {
+    const currentFilters: ProductFilters = {
+      page: parseInt(searchParams.get('page') || '1', 10),
+      limit: parseInt(searchParams.get('limit') || '12', 10),
+    };
+
+    // Add search parameter
+    const search = searchParams.get('search') || searchParams.get('q');
+    if (search) {
+      currentFilters.search = search;
+    }
+
+    // Add category parameter
+    const category = searchParams.get('category');
+    if (category) {
+      currentFilters.category = category;
+    }
+
+    // Add type parameter
+    const type = searchParams.get('type');
+    if (type) {
+      currentFilters.type = type;
+    }
+
+    return currentFilters;
+  }, [searchParams]);
+
   const fetchProducts = useCallback(async (newFilters: ProductFilters = {}) => {
     try {
       setLoading(true);
       setError(null);
       
-      const response = await ProductService.getProducts({
-        ...filters,
-        ...newFilters,
-      });
+      const currentFilters = { ...filters, ...newFilters };
+      const response = await ProductService.getProducts(currentFilters);
       
       setProducts(response.products);
       setPagination(response.pagination);
-      setFilters(prev => ({ ...prev, ...newFilters }));
+      setFilters(currentFilters);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch products');
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, []);
+
+  // Fetch products when URL params change
+  useEffect(() => {
+    const currentFilters = getCurrentFilters();
+    console.log('🔍 useProducts - URL params changed, fetching with filters:', currentFilters);
+    fetchProducts(currentFilters);
+  }, [searchParams, getCurrentFilters, fetchProducts]);
 
   const searchProducts = useCallback(async (query: string) => {
     try {
@@ -107,6 +142,7 @@ export function useProducts(initialFilters: ProductFilters = {}) {
   }, []);
 
   const updateFilters = useCallback((newFilters: Partial<ProductFilters>) => {
+    console.log('🔧 updateFilters called with:', newFilters);
     fetchProducts(newFilters);
   }, [fetchProducts]);
 
@@ -119,21 +155,15 @@ export function useProducts(initialFilters: ProductFilters = {}) {
   }, [fetchProducts]);
 
   const goToPage = useCallback((page: number) => {
+    if (page < 1) return;
     fetchProducts({ ...filters, page });
   }, [fetchProducts, filters]);
-
-  // Initial load
-  useEffect(() => {
-    fetchProducts();
-  }, []);
 
   return {
     products,
     loading,
     error,
     pagination,
-    filters,
-    fetchProducts,
     searchProducts,
     getProduct,
     getProductsByCategory,

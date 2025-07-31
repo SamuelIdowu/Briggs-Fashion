@@ -41,13 +41,15 @@ export class ProductService {
       }
     });
 
-    const response = await fetch(`${this.baseUrl}/products?${params.toString()}`);
+    const url = `${this.baseUrl}/products?${params.toString()}`;
+    const response = await fetch(url);
     
     if (!response.ok) {
       throw new Error('Failed to fetch products');
     }
     
-    return response.json();
+    const data = await response.json();
+    return data;
   }
 
   static async getProduct(id: string): Promise<Product> {

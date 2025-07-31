@@ -12,7 +12,19 @@ export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
+  const heroImages = ['/inspo3.jpg', '/inspo4.jpg', '/inspo5.jpg'];
+
+  // Simple image rotation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [heroImages.length]);
+
   useEffect(() => {
     fetch('/api/products?limit=4')
       .then(res => res.json())
@@ -20,9 +32,8 @@ export default function Home() {
   }, []);
 
   const collections = [
-    { name: 'Traditional Wear', href: '/products?category=traditional', image: 'https://placehold.co/600x400.png', hint: 'traditional clothing' },
-    { name: 'Casual Wear', href: '/products?category=casual', image: 'https://placehold.co/600x400.png', hint: 'casual fashion' },
-    { name: 'Custom Tailoring', href: '/products?category=custom', image: 'https://placehold.co/600x400.png', hint: 'tailor measuring' },
+    { name: 'Traditional Wear', href: '/products?category=traditional', image: '/inspo1.jpg', hint: 'traditional clothing' },
+    { name: 'Casual Wear', href: '/products?category=casual', image: '/inspo2.jpg', hint: 'casual fashion' },
   ];
 
   const handleProductClick = (product: Product) => {
@@ -38,16 +49,19 @@ export default function Home() {
   return (
     <div className="bg-background text-foreground">
       {/* Hero Section */}
-      <section className="relative h-[60vh] min-h-[400px] w-full bg-black/40 text-white">
-        <Image
-          src="https://placehold.co/1600x900.png"
-          alt="Elegant traditional Nigerian attire"
-          data-ai-hint="nigerian fashion men"
-          fill
-          className="object-cover -z-10"
-          priority
+      <section className="relative h-[60vh] min-h-[400px] w-full text-white">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+          style={{ 
+            backgroundImage: `url(${heroImages[currentImageIndex]})`,
+          }}
         />
-        <div className="container mx-auto flex h-full flex-col items-center justify-center text-center">
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/40" />
+        
+        {/* Content */}
+        <div className="relative z-10 container mx-auto flex h-full flex-col items-center justify-center text-center">
           <h1 className="text-4xl font-bold md:text-6xl drop-shadow-lg font-headline">The Essence of Nigerian Elegance</h1>
           <p className="mt-4 max-w-2xl text-lg md:text-xl drop-shadow-md">
             Experience unparalleled craftsmanship with our exclusive collection of traditional and modern menswear.
@@ -62,7 +76,7 @@ export default function Home() {
       <section className="py-16 sm:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold tracking-tight text-center font-headline">Our Collections</h2>
-          <div className="mt-10 grid grid-cols-1 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 sm:gap-x-6 lg:gap-x-8">
+          <div className="mt-10 grid grid-cols-1 gap-y-10 sm:grid-cols-2 lg:gap-x-8">
             {collections.map((collection) => (
               <Link key={collection.name} href={collection.href} className="group block">
                 <div className="relative h-96 w-full overflow-hidden rounded-lg">
@@ -106,9 +120,9 @@ export default function Home() {
 
       {/* Product Modal */}
       <ProductModal
-        product={selectedProduct}
         isOpen={isModalOpen}
         onClose={handleModalClose}
+        product={selectedProduct}
       />
     </div>
   );

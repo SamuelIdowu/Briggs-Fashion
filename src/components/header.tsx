@@ -1,15 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
-import { Menu } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 
 export function Header() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  
   const navItems = [
     { href: "/products", label: "All Products" },
     { href: "/products?category=traditional", label: "Traditional" },
@@ -21,20 +23,26 @@ export function Header() {
 
   const NavLinks = ({ className }: { className?: string }) => (
     <nav className={cn("flex items-center gap-4 lg:gap-6", className)}>
-      {(navItems || []).map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          className={cn(
-            "transition-colors hover:text-primary/80 text-sm font-medium",
-            pathname === item.href || (item.href.includes('?') && pathname === item.href.split('?')[0] && typeof window !== 'undefined' && window.location.search === '?' + item.href.split('?')[1])
-              ? "text-primary font-semibold"
-              : "text-foreground/60"
-          )}
-        >
-          {item.label}
-        </Link>
-      ))}
+      {(navItems || []).map((item) => {
+        const isActive = item.href.includes('?') 
+          ? pathname === item.href.split('?')[0] && searchParams.get('category') === item.href.split('?')[1].split('=')[1]
+          : pathname === item.href;
+          
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={cn(
+              "transition-colors hover:text-primary/80 text-sm font-medium",
+              isActive
+                ? "text-primary font-semibold"
+                : "text-foreground/60"
+            )}
+          >
+            {item.label}
+          </Link>
+        );
+      })}
     </nav>
   );
 
@@ -64,6 +72,13 @@ export function Header() {
                </div>
             </SheetContent>
           </Sheet>
+        </div>
+        <div className="hidden md:flex items-center gap-2">
+          <Link href="/products">
+            <Button variant="ghost" size="icon" title="Search products">
+              <Search className="h-5 w-5" />
+            </Button>
+          </Link>
         </div>
       </div>
     </header>

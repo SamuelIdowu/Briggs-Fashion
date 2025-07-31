@@ -50,11 +50,18 @@ export class WhatsAppService {
   }
 
   static getNumber(type: 'sales' | 'custom' | 'support'): string {
-    return this.config[type];
+    return this.config[type] || this.config.sales; // Fallback to sales number
   }
 
   static createWhatsAppUrl(message: WhatsAppMessage): string {
     const number = this.getNumber(message.type === 'custom' ? 'custom' : 'sales');
+    
+    // Ensure number is not undefined
+    if (!number) {
+      console.error('WhatsApp number not found, using default');
+      return `https://wa.me/2348012345678?text=${encodeURIComponent('Hello! I have an inquiry about your products.')}`;
+    }
+    
     const text = this.generateMessage(message);
     const encodedMessage = encodeURIComponent(text);
     const cleanNumber = number.replace(/\D/g, '');

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -44,6 +44,19 @@ function TabPanel({ value, children }: { value: string; children: React.ReactNod
 }
 
 export default function SizeGuidePage() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  const heroImages = ['/inspo4.jpg', '/inspo5.jpg', '/inspo6.jpg'];
+
+  // Simple image rotation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [heroImages.length]);
+
   const handleWhatsAppClick = () => {
     const message = "Hello! I need help with sizing for your products. Can you assist me?";
     const encodedMessage = encodeURIComponent(message);
@@ -54,8 +67,19 @@ export default function SizeGuidePage() {
   return (
     <div className="bg-background text-foreground">
       {/* Hero Section */}
-      <section className="relative h-[40vh] min-h-[300px] w-full bg-black/40 text-white">
-        <div className="container mx-auto flex h-full flex-col items-center justify-center text-center">
+      <section className="relative h-[40vh] min-h-[300px] w-full text-white">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+          style={{ 
+            backgroundImage: `url(${heroImages[currentImageIndex]})`,
+          }}
+        />
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/40" />
+        
+        {/* Content */}
+        <div className="relative z-10 container mx-auto flex h-full flex-col items-center justify-center text-center">
           <h1 className="text-4xl font-bold md:text-6xl drop-shadow-lg">Size Guide</h1>
           <p className="mt-4 max-w-2xl text-lg md:text-xl drop-shadow-md">
             Find your perfect fit with our comprehensive sizing guide

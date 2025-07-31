@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { WhatsAppButton } from '@/components/whatsapp-button';
@@ -31,6 +31,9 @@ export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
+        <DialogTitle className="sr-only">
+          Product Details - {product.name}
+        </DialogTitle>
         <div className="relative">
           {/* Close button */}
           <Button

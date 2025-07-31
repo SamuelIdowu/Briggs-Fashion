@@ -164,33 +164,6 @@ export const products: Product[] = [
     updatedAt: '2024-01-01T00:00:00Z'
   },
   {
-    id: 'custom-suit-001',
-    name: 'Bespoke Wedding Suit',
-    description: 'Create the suit of your dreams for your special day. Our master tailors will guide you through fabric selection and design.',
-    category: 'custom',
-    type: 'made-to-order',
-    images: ['https://placehold.co/600x800.png', 'https://placehold.co/600x800.png'],
-    price: 250000,
-    variations: {
-      sizes: ['Custom'],
-      colors: ['Client\'s Choice'],
-      materials: ['Italian Wool', 'Velvet', 'Silk Blend'],
-    },
-    details: {
-      materialComposition: 'Based on client selection.',
-      careInstructions: 'Varies by fabric. Care instructions provided upon delivery.',
-      sizingInfo: 'Fully bespoke. Requires multiple fittings.',
-    },
-    seo: {
-      metaTitle: 'Bespoke Wedding Suit - Custom Tailoring Services',
-      metaDescription: 'Create your dream wedding suit with our master tailors. Premium fabrics and perfect fit guaranteed.',
-      keywords: ['bespoke suit', 'wedding suit', 'custom tailoring', 'master tailor', 'made-to-order']
-    },
-    isActive: true,
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z'
-  },
-    {
     id: 'isiagu-001',
     name: 'Modern Isiagu Top',
     description: 'A contemporary interpretation of the traditional Igbo Isiagu top, adorned with the iconic lion head pattern. Perfect for cultural events.',
@@ -219,7 +192,6 @@ export const products: Product[] = [
   },
 ];
 
-
 export const orders: Order[] = [
   {
     id: 'ORD-001',
@@ -247,64 +219,71 @@ export const orders: Order[] = [
   },
   {
     id: 'ORD-004',
-    customerName: 'Fatima Aliyu',
+    customerName: 'Fatima Hassan',
     customerEmail: 'fatima@example.com',
-    date: '2023-10-24T18:00:00Z',
-    status: 'Pending',
+    date: '2023-10-24T16:45:00Z',
+    status: 'Delivered',
     total: 35000,
   },
   {
     id: 'ORD-005',
-    customerName: 'Emeka Nwosu',
-    customerEmail: 'emeka@example.com',
-    date: '2023-10-23T11:45:00Z',
-    status: 'Cancelled',
-    total: 40000,
+    customerName: 'Kemi Adebayo',
+    customerEmail: 'kemi@example.com',
+    date: '2023-10-24T11:20:00Z',
+    status: 'Shipped',
+    total: 28000,
   },
 ];
 
-export const collections: Collection[] = [
+export const collections = [
   {
-    id: 'traditional-wear',
-    name: 'Traditional Wear',
-    description: 'Exquisite traditional Nigerian attire including Agbada, Dashiki, Kaftan, and Isiagu.',
+    id: 'traditional-collection',
+    name: 'Traditional Collection',
+    description: 'Our finest traditional Nigerian wear, perfect for special occasions and cultural events.',
     products: ['agbada-001', 'dashiki-001', 'kaftan-001', 'isiagu-001'],
     isActive: true,
     createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
   },
   {
-    id: 'casual-wear',
-    name: 'Casual Wear',
-    description: 'Comfortable and stylish casual wear perfect for everyday use.',
+    id: 'casual-collection',
+    name: 'Casual Collection',
+    description: 'Comfortable and stylish casual wear for everyday use.',
     products: ['shirt-001', 'trousers-001', 'polo-001'],
     isActive: true,
     createdAt: '2024-01-01T00:00:00Z',
-  },
-  {
-    id: 'custom-tailoring',
-    name: 'Custom Tailoring',
-    description: 'Bespoke tailoring services for the perfect fit and unique designs.',
-    products: ['custom-suit-001', 'agbada-001', 'isiagu-001'],
-    isActive: true,
-    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
   },
 ];
 
-export const siteSettings: SiteSettings = {
+export const siteSettings = {
   businessInfo: {
-    name: 'Brigg\'s Fashion and Store',
-    address: '123 Fashion Street, Lagos, Nigeria',
-    phone: '+234 801 234 5678',
-    whatsappNumbers: {
-      sales: '+234 801 234 5678',
-      custom: '+234 802 345 6789',
-      support: '+234 803 456 7890',
-    },
-    businessHours: 'Monday - Saturday: 9:00 AM - 6:00 PM, Sunday: 12:00 PM - 4:00 PM',
+    name: "Brigg's Fashion and Store",
+    email: "info@briggsfashion.com",
+    phone: "+234 801 234 5678",
+    address: "123 Fashion Street, Victoria Island, Lagos, Nigeria",
+    whatsappNumbers: ["+234 801 234 5678", "+234 802 345 6789"]
   },
   homepage: {
-    heroTitle: 'The Essence of Nigerian Elegance',
-    heroDescription: 'Experience unparalleled craftsmanship with our exclusive collection of traditional and modern menswear.',
-    featuredProducts: ['agbada-001', 'dashiki-001', 'kaftan-001', 'shirt-001'],
+    hero: {
+      title: "Elevate Your Style",
+      subtitle: "Discover our curated collection of premium Nigerian fashion",
+      description: "From traditional Agbada to modern casual wear, we offer the finest quality garments tailored to perfection."
+    },
+    featuredSection: {
+      title: "Featured Products",
+      subtitle: "Handpicked pieces from our collection"
+    }
   },
+  seo: {
+    metaTitle: "Brigg's Fashion and Store - Premium Nigerian Fashion",
+    metaDescription: "Discover premium Nigerian fashion at Brigg's Fashion and Store. Traditional Agbada, modern casual wear, and custom tailoring services.",
+    keywords: ["nigerian fashion", "agbada", "traditional wear", "casual wear", "custom tailoring", "premium fashion"]
+  },
+  social: {
+    facebook: "https://facebook.com/briggsfashion",
+    instagram: "https://instagram.com/briggsfashion",
+    twitter: "https://twitter.com/briggsfashion",
+    whatsapp: "https://wa.me/2348012345678"
+  }
 };

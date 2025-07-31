@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,19 +8,35 @@ import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 
 export default function AboutPage() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  const heroImages = ['/inspo1.jpg', '/inspo2.jpg', '/inspo3.jpg'];
+
+  // Simple image rotation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [heroImages.length]);
+
   return (
     <div className="bg-background text-foreground">
       {/* Hero Section */}
-      <section className="relative h-[50vh] min-h-[400px] w-full bg-black/40 text-white">
-        <Image
-          src="https://placehold.co/1600x900.png"
-          alt="Brigg's Fashion and Store workshop"
-          data-ai-hint="tailor workshop"
-          fill
-          className="object-cover -z-10"
-          priority
+      <section className="relative h-[50vh] min-h-[400px] w-full text-white">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+          style={{ 
+            backgroundImage: `url(${heroImages[currentImageIndex]})`,
+          }}
         />
-        <div className="container mx-auto flex h-full flex-col items-center justify-center text-center">
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/40" />
+        
+        {/* Content */}
+        <div className="relative z-10 container mx-auto flex h-full flex-col items-center justify-center text-center">
           <h1 className="text-4xl font-bold md:text-6xl drop-shadow-lg">Our Story</h1>
           <p className="mt-4 max-w-2xl text-lg md:text-xl drop-shadow-md">
             Crafting excellence in Nigerian fashion since 1995
@@ -55,11 +72,11 @@ export default function AboutPage() {
             </div>
             <div className="relative">
               <Image
-                src="https://placehold.co/600x800.png"
+                src="/inspo2.jpg"
                 alt="Traditional Nigerian fashion"
                 width={600}
                 height={800}
-                className="rounded-lg shadow-lg"
+                className="rounded-lg shadow-lg object-cover"
               />
             </div>
           </div>

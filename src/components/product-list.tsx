@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ProductCard } from '@/components/product-card';
 import { ProductModal } from '@/components/product-modal';
 import { FilterSidebar } from '@/components/filter-sidebar';
 import { Button } from '@/components/ui/button';
 import { useProducts } from '@/hooks/useProducts';
 import { useModal } from '@/hooks/useModal';
-import { Filter, Grid, List } from 'lucide-react';
+import { Grid, List, Search } from 'lucide-react';
 import type { Product } from '@/types';
 
 interface ProductListProps {
@@ -31,9 +32,12 @@ export function ProductList({
   layout = 'grid',
   className = '',
 }: ProductListProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>(layout);
   const [showFilterSidebar, setShowFilterSidebar] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(initialFilters.search || '');
   const [activeFilters, setActiveFilters] = useState({
     categories: [],
     types: [],
@@ -63,8 +67,30 @@ export function ProductList({
     openModal();
   };
 
+  // Debounced search function
+  const debouncedSearch = useCallback(
+    debounce((query: string) => {
+      console.log('🔍 Search query:', query);
+      const params = new URLSearchParams(searchParams);
+      if (query.trim()) {
+        params.set('search', query.trim());
+        console.log('🔍 Setting search param:', query.trim());
+      } else {
+        params.delete('search');
+        console.log('🔍 Removing search param');
+      }
+      params.delete('page'); // Reset to first page when searching
+      const newUrl = `/products?${params.toString()}`;
+      console.log('🔍 Navigating to:', newUrl);
+      router.push(newUrl);
+    }, 300), // Reduced from 500ms to 300ms for faster response
+    [searchParams, router]
+  );
+
   const handleSearch = (query: string) => {
-    updateFilters({ search: query, page: 1 });
+    console.log('🔍 handleSearch called with:', query);
+    setSearchQuery(query);
+    debouncedSearch(query);
   };
 
   const handleFilterChange = (newFilters: any) => {
@@ -72,13 +98,39 @@ export function ProductList({
       categories: newFilters.categories || [],
       types: newFilters.types || [],
     });
-    updateFilters({ ...newFilters, page: 1 });
+    
+    // Convert filter arrays to API format
+    const apiFilters: any = { page: 1 };
+    
+    // If categories are selected, use the first one (or join them)
+    if (newFilters.categories && newFilters.categories.length > 0) {
+      apiFilters.category = newFilters.categories[0]; // Use first category for now
+    }
+    
+    // If types are selected, use the first one (or join them)
+    if (newFilters.types && newFilters.types.length > 0) {
+      apiFilters.type = newFilters.types[0]; // Use first type for now
+    }
+    
+    updateFilters(apiFilters);
   };
 
   const handleClearFilters = () => {
     setActiveFilters({ categories: [], types: [] });
     clearFilters();
   };
+
+  // Simple debounce function
+  function debounce<T extends (...args: any[]) => any>(
+    func: T,
+    wait: number
+  ): (...args: Parameters<T>) => void {
+    let timeout: NodeJS.Timeout;
+    return (...args: Parameters<T>) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  }
 
   if (loading) {
     return (
@@ -101,18 +153,28 @@ export function ProductList({
 
   return (
     <div className={className}>
-      {/* Header with Search and Filters */}
+      {/* Header with Search and View Controls */}
       <div className="mb-6 space-y-4">
         {/* Search and View Controls */}
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           {showSearch && (
             <div className="flex-1 max-w-md">
-              <input
-                type="text"
-                placeholder="Search products..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                onChange={(e) => handleSearch(e.target.value)}
-              />
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    console.log('🔍 Search input changed:', e.target.value);
+                    handleSearch(e.target.value);
+                  }}
+                  onKeyDown={(e) => {
+                    console.log('🔍 Search key pressed:', e.key);
+                  }}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                />
+              </div>
             </div>
           )}
           
@@ -126,6 +188,8 @@ export function ProductList({
                     ? 'bg-white text-primary shadow-sm'
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
+                title="Grid view"
+                aria-label="Switch to grid view"
               >
                 <Grid size={18} />
               </button>
@@ -136,30 +200,36 @@ export function ProductList({
                     ? 'bg-white text-primary shadow-sm'
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
+                title="List view"
+                aria-label="Switch to list view"
               >
                 <List size={18} />
               </button>
             </div>
-
-            {/* Filter Toggle */}
-            {showFilters && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowFilterSidebar(true)}
-                className="flex items-center gap-2"
-              >
-                <Filter size={16} />
-                Filters
-              </Button>
-            )}
           </div>
         </div>
       </div>
 
       {/* Products Grid/List */}
       <div className="mb-8">
-        {viewMode === 'grid' ? (
+        {products.length === 0 ? (
+          <div className="text-center py-12">
+            <Search className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No products found</h3>
+            <p className="text-gray-500">
+              {searchQuery ? `No products match "${searchQuery}"` : 'No products available'}
+            </p>
+            {searchQuery && (
+              <Button 
+                onClick={() => handleSearch('')} 
+                variant="outline" 
+                className="mt-4"
+              >
+                Clear search
+              </Button>
+            )}
+          </div>
+        ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {products.map((product) => (
               <ProductCard

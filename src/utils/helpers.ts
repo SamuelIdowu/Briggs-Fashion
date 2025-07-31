@@ -118,7 +118,6 @@ export function getCategoryDisplayName(category: string): string {
   const categoryMap: Record<string, string> = {
     traditional: 'Traditional Wear',
     casual: 'Casual Wear',
-    custom: 'Custom Tailoring',
   };
   return categoryMap[category] || capitalize(category);
 }

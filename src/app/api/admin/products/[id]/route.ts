@@ -1,0 +1,130 @@
+import { NextRequest, NextResponse } from 'next/server';
+import dbConnect from '@/lib/database';
+import Product from '@/models/Product';
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await dbConnect();
+    
+    const product = await Product.findById(params.id);
+    
+    if (!product) {
+      return NextResponse.json(
+        { success: false, error: 'Product not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: product
+    });
+  } catch (error) {
+    console.error('Get Product API Error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch product' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await dbConnect();
+    
+    const body = await request.json();
+    
+    // Validate required fields
+    const { name, description, category, type, price } = body;
+    if (!name || !description || !category || !type || !price) {
+      return NextResponse.json(
+        { success: false, error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    // Convert price to kobo if it's a number
+    let priceInKobo = body.price;
+    if (typeof body.price === 'number' && body.price > 0) {
+      priceInKobo = Math.round(body.price * 100);
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      params.id,
+      {
+        ...body,
+        price: priceInKobo,
+        images: body.images || [],
+        variations: {
+          sizes: body.variations?.sizes || [],
+          colors: body.variations?.colors || [],
+          materials: body.variations?.materials || []
+        },
+        details: {
+          materialComposition: body.details?.materialComposition || '',
+          careInstructions: body.details?.careInstructions || '',
+          sizingInfo: body.details?.sizingInfo || ''
+        },
+        seo: {
+          metaTitle: body.seo?.metaTitle || name,
+          metaDescription: body.seo?.metaDescription || description.substring(0, 160),
+          keywords: body.seo?.keywords || []
+        }
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedProduct) {
+      return NextResponse.json(
+        { success: false, error: 'Product not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: updatedProduct
+    });
+  } catch (error) {
+    console.error('Update Product API Error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to update product' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await dbConnect();
+    
+    const product = await Product.findByIdAndDelete(params.id);
+    
+    if (!product) {
+      return NextResponse.json(
+        { success: false, error: 'Product not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Product deleted successfully'
+    });
+  } catch (error) {
+    console.error('Delete Product API Error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to delete product' },
+      { status: 500 }
+    );
+  }
+} 

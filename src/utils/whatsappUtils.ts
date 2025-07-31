@@ -1,6 +1,13 @@
 import { WhatsAppService, WhatsAppMessage } from '@/services/whatsappService';
 import { WHATSAPP_NUMBERS } from '@/utils/constants';
 
+// Declare gtag for TypeScript
+declare global {
+  interface Window {
+    gtag?: (command: string, targetId: string, config?: any) => void;
+  }
+}
+
 // Initialize WhatsApp service with default numbers
 WhatsAppService.setConfig(WHATSAPP_NUMBERS);
 
@@ -8,22 +15,22 @@ WhatsAppService.setConfig(WHATSAPP_NUMBERS);
 export const WHATSAPP_TEMPLATES = {
   GENERAL_INQUIRY: 'Hello! I have a general inquiry about your products and services. Can you help me?',
   SIZING_HELP: 'Hello! I need help with sizing for your products. Can you assist me?',
-  CUSTOM_CONSULTATION: 'Hello! I\'d like to schedule a consultation for custom tailoring. When are you available?',
+  CUSTOM_CONSULTATION: 'Hello! I\'d like to schedule a consultation for made-to-order pieces. When are you available?',
   PRODUCT_AVAILABILITY: 'Hello! I\'m interested in a product from your website. Is it currently available?',
-  PRICING_INQUIRY: 'Hello! I\'d like to know more about your pricing for custom pieces. Can you provide details?',
+  PRICING_INQUIRY: 'Hello! I\'d like to know more about your pricing for made-to-order pieces. Can you provide details?',
   ALTERATION_SERVICE: 'Hello! Do you offer alteration services? I have some pieces that need adjustments.',
 } as const;
 
 // Create WhatsApp message for product inquiry
 export function createProductInquiry(
   productName: string,
-  type: 'ready-made' | 'custom',
+  type: 'ready-made' | 'made-to-order',
   size?: string,
   color?: string
 ): WhatsAppMessage {
   return {
     productName,
-    type,
+    type: type === 'made-to-order' ? 'custom' : 'ready-made', // Convert to service expected type
     size,
     color,
   };
@@ -37,13 +44,13 @@ export function createGeneralInquiry(message?: string): WhatsAppMessage {
   };
 }
 
-// Create WhatsApp message for custom tailoring
+// Create WhatsApp message for made-to-order pieces
 export function createCustomInquiry(productName?: string): WhatsAppMessage {
   return {
     productName,
-    type: 'custom',
+    type: 'custom', // Use 'custom' type for made-to-order
     customMessage: productName 
-      ? `Hello! I'd like to discuss custom tailoring for ${productName}. Can we schedule a consultation?`
+      ? `Hello! I'd like to discuss made-to-order pieces for ${productName}. Can we schedule a consultation?`
       : WHATSAPP_TEMPLATES.CUSTOM_CONSULTATION,
   };
 }
@@ -126,9 +133,16 @@ export function createProductShareUrl(
 ): string {
   const message = `Check out this amazing product from Brigg's Fashion and Store: ${productName}\n\n${productUrl}`;
   const encodedMessage = encodeURIComponent(message);
-  const number = WhatsAppService.getNumber('sales').replace(/\D/g, '');
+  const number = WhatsAppService.getNumber('sales');
   
-  return `https://wa.me/${number}?text=${encodedMessage}`;
+  // Ensure number is not undefined
+  if (!number) {
+    console.error('WhatsApp number not found, using default');
+    return `https://wa.me/2348012345678?text=${encodedMessage}`;
+  }
+  
+  const cleanNumber = number.replace(/\D/g, '');
+  return `https://wa.me/${cleanNumber}?text=${encodedMessage}`;
 }
 
 // Track WhatsApp button clicks

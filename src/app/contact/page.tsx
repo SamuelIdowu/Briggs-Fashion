@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,14 +10,38 @@ import { MessageCircle, Phone, MapPin, Clock, Mail } from 'lucide-react';
 import { siteSettings } from '@/lib/data';
 
 export default function ContactPage() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  const heroImages = ['/inspo5.jpg', '/inspo6.jpg', '/inspo7.jpg'];
+
+  // Simple image rotation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [heroImages.length]);
+
   const handleWhatsAppClick = (number: string, type: string) => {
+    // Add null check for number
+    if (!number) {
+      console.error('WhatsApp number is undefined');
+      return;
+    }
+    
     const message = `Hello! I'd like to inquire about ${type} services at Brigg's Fashion and Store.`;
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${number.replace(/\D/g, '')}?text=${encodedMessage}`;
+    const cleanNumber = number.replace(/\D/g, '');
+    const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
   };
 
   const handlePhoneClick = (number: string) => {
+    if (!number) {
+      console.error('Phone number is undefined');
+      return;
+    }
     window.open(`tel:${number}`, '_self');
   };
 
@@ -24,11 +49,28 @@ export default function ContactPage() {
     window.open('mailto:info@briggsfashion.com', '_self');
   };
 
+  // Get WhatsApp numbers from the array
+  const whatsappNumbers = siteSettings.businessInfo.whatsappNumbers;
+  const salesNumber = whatsappNumbers[0] || '+234 801 234 5678';
+  const customNumber = whatsappNumbers[1] || '+234 802 345 6789';
+  const supportNumber = whatsappNumbers[0] || '+234 801 234 5678'; // Use sales number as fallback
+
   return (
     <div className="bg-background text-foreground">
       {/* Hero Section */}
-      <section className="relative h-[40vh] min-h-[300px] w-full bg-black/40 text-white">
-        <div className="container mx-auto flex h-full flex-col items-center justify-center text-center">
+      <section className="relative h-[40vh] min-h-[300px] w-full text-white">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+          style={{ 
+            backgroundImage: `url(${heroImages[currentImageIndex]})`,
+          }}
+        />
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/40" />
+        
+        {/* Content */}
+        <div className="relative z-10 container mx-auto flex h-full flex-col items-center justify-center text-center">
           <h1 className="text-4xl font-bold md:text-6xl drop-shadow-lg">Contact Us</h1>
           <p className="mt-4 max-w-2xl text-lg md:text-xl drop-shadow-md">
             Get in touch with our team for personalized service and expert guidance
@@ -59,7 +101,7 @@ export default function ContactPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground">{siteSettings.businessInfo.businessHours}</p>
+                  <p className="text-muted-foreground">Monday - Saturday: 9:00 AM - 6:00 PM, Sunday: 12:00 PM - 4:00 PM</p>
                 </CardContent>
               </Card>
 
@@ -138,10 +180,10 @@ export default function ContactPage() {
                         Inquire about our ready-made collection, check availability, 
                         and get quick answers about sizes and colors.
                       </p>
-                      <p className="text-sm font-medium">{siteSettings.businessInfo.whatsappNumbers.sales}</p>
+                      <p className="text-sm font-medium">{salesNumber}</p>
                     </div>
                     <Button
-                      onClick={() => handleWhatsAppClick(siteSettings.businessInfo.whatsappNumbers.sales, 'sales')}
+                      onClick={() => handleWhatsAppClick(salesNumber, 'sales')}
                       className="bg-green-600 hover:bg-green-700 text-white"
                     >
                       <MessageCircle className="mr-2 h-4 w-4" />
@@ -164,10 +206,10 @@ export default function ContactPage() {
                         Schedule consultations, discuss custom designs, and get expert 
                         advice from our master tailors.
                       </p>
-                      <p className="text-sm font-medium">{siteSettings.businessInfo.whatsappNumbers.custom}</p>
+                      <p className="text-sm font-medium">{customNumber}</p>
                     </div>
                     <Button
-                      onClick={() => handleWhatsAppClick(siteSettings.businessInfo.whatsappNumbers.custom, 'custom tailoring')}
+                      onClick={() => handleWhatsAppClick(customNumber, 'custom tailoring')}
                       className="bg-green-600 hover:bg-green-700 text-white"
                     >
                       <MessageCircle className="mr-2 h-4 w-4" />
@@ -190,10 +232,10 @@ export default function ContactPage() {
                         Get help with orders, sizing questions, care instructions, 
                         and any other customer service needs.
                       </p>
-                      <p className="text-sm font-medium">{siteSettings.businessInfo.whatsappNumbers.support}</p>
+                      <p className="text-sm font-medium">{supportNumber}</p>
                     </div>
                     <Button
-                      onClick={() => handleWhatsAppClick(siteSettings.businessInfo.whatsappNumbers.support, 'customer support')}
+                      onClick={() => handleWhatsAppClick(supportNumber, 'customer support')}
                       className="bg-green-600 hover:bg-green-700 text-white"
                     >
                       <MessageCircle className="mr-2 h-4 w-4" />
@@ -264,7 +306,7 @@ export default function ContactPage() {
             <Button 
               size="lg" 
               variant="secondary"
-              onClick={() => handleWhatsAppClick(siteSettings.businessInfo.whatsappNumbers.sales, 'general inquiry')}
+              onClick={() => handleWhatsAppClick(salesNumber, 'general inquiry')}
             >
               <MessageCircle className="mr-2 h-4 w-4" />
               Start WhatsApp Chat

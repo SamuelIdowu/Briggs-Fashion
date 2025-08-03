@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: false, // Enable in production
   },
   
+  // Vercel specific optimizations
+  swcMinify: true,
+  poweredByHeader: false,
+  
   // Image optimization
   images: {
     remotePatterns: [

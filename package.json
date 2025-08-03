@@ -11,7 +11,10 @@
     "seed": "tsx scripts/seed.ts",
     "db:seed": "npm run seed",
     "db:reset": "npm run seed",
-    "vercel:deploy": "vercel --prod"
+    "vercel:deploy": "vercel --prod",
+    "vercel:dev": "vercel dev",
+    "vercel:build": "vercel build",
+    "postbuild": "echo 'Build completed successfully'"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.3",

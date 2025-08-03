@@ -13,7 +13,6 @@ const nextConfig: NextConfig = {
   },
   
   // Vercel specific optimizations
-  swcMinify: true,
   poweredByHeader: false,
   
   // Image optimization

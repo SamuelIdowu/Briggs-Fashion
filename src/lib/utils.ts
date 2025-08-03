@@ -16,3 +16,11 @@ export function formatPrice(price: number) {
     maximumFractionDigits: isWholeNumber ? 0 : 2,
   }).format(price);
 }
+
+export function formatDate(dateString: string) {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+}

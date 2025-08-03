@@ -6,7 +6,7 @@ import { StructuredData } from '@/components/structured-data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { formatDate } from '@/utils/helpers';
+import { formatDate } from '@/lib/utils';
 import type { Collection } from '@/types';
 
 interface CollectionPageProps {
@@ -146,11 +146,12 @@ export default function CollectionPage({ params }: CollectionPageProps) {
 
       {/* Structured Data */}
       <StructuredData 
-        type="organization" 
         data={{
-          name: collection.name,
-          description: collection.description,
-          url: `https://briggsfashion.com/collections/${collection.id}`,
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": collection.name,
+          "description": collection.description,
+          "url": `https://briggsfashion.com/collections/${collection.id}`,
         }} 
       />
     </div>

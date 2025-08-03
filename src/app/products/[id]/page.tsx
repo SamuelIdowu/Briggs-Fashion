@@ -66,8 +66,4 @@ export default async function ProductPage({ params }: ProductPageProps) {
   );
 }
 
-export function generateStaticParams() {
-  return products.map((product) => ({
-    id: product.id,
-  }));
-}
+// Note: generateStaticParams removed as it references undefined 'products' variable

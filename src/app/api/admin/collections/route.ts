@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/database';
 import Collection from '@/models/Collection';
+import Product from '@/models/Product';
 
 export async function GET(request: NextRequest) {
   try {
@@ -31,10 +32,25 @@ export async function GET(request: NextRequest) {
       Collection.countDocuments(query)
     ]);
 
+    // Get product counts for each collection by category
+    const collectionsWithProductCounts = await Promise.all(
+      collections.map(async (collection) => {
+        const productCount = await Product.countDocuments({
+          category: collection.name,
+          isActive: true
+        });
+        
+        return {
+          ...collection,
+          productCount
+        };
+      })
+    );
+
     return NextResponse.json({
       success: true,
       data: {
-        collections,
+        collections: collectionsWithProductCounts,
         pagination: {
           page,
           limit,

@@ -72,6 +72,7 @@ export async function GET(request: NextRequest) {
     filters.isActive = true;
 
     console.log('🔍 Final filters object:', filters);
+    console.log('🔍 Category filter value:', filters.category);
 
     // Query products
     const [products, total] = await Promise.all([

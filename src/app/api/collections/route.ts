@@ -5,9 +5,22 @@ import Collection from '@/models/Collection';
 export async function GET(request: NextRequest) {
   try {
     await dbConnect();
-    const collections = await Collection.find().lean();
-    return NextResponse.json({ collections });
+    
+    const collections = await Collection.find({ isActive: true })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        collections
+      }
+    });
   } catch (error) {
-    return NextResponse.json({ error: 'collections not found' }, { status: 404 });
+    console.error('Collections API Error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch collections' },
+      { status: 500 }
+    );
   }
 } 

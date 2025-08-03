@@ -1,15 +1,15 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ProductCard } from '@/components/product-card';
 import { ProductModal } from '@/components/product-modal';
-import { FilterSidebar } from '@/components/filter-sidebar';
 import { Button } from '@/components/ui/button';
 import { useProducts } from '@/hooks/useProducts';
 import { useModal } from '@/hooks/useModal';
-import { Grid, List, Search } from 'lucide-react';
+import { Grid, List, Search, Filter, ChevronDown } from 'lucide-react';
 import type { Product } from '@/types';
+import { formatPrice } from '@/lib/utils';
 
 interface ProductListProps {
   initialFilters?: {
@@ -36,8 +36,8 @@ export function ProductList({
   const searchParams = useSearchParams();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>(layout);
-  const [showFilterSidebar, setShowFilterSidebar] = useState(false);
   const [searchQuery, setSearchQuery] = useState(initialFilters.search || '');
+  const [collections, setCollections] = useState<any[]>([]);
   const [activeFilters, setActiveFilters] = useState({
     categories: [],
     types: [],
@@ -56,11 +56,36 @@ export function ProductList({
     goToPage,
   } = useProducts(initialFilters);
 
+  // Fetch collections for category options
+  useEffect(() => {
+    fetch('/api/collections')
+      .then(res => res.json())
+      .then(data => {
+        console.log('📋 Collections API response:', data);
+        if (data.success) {
+          setCollections(data.data.collections || []);
+          console.log('📋 Collections set:', data.data.collections);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching collections:', error);
+      });
+  }, []);
+
   const availableFilters = useMemo(() => {
-    const categories = [...new Set(products.map(p => p.category).filter(Boolean))] as string[];
+    // Use collections as categories instead of product categories
+    const categories = collections.map(c => c.name);
     const types = [...new Set(products.map(p => p.type).filter(Boolean))] as string[];
+    console.log('🔍 Available filters:', { categories, types, collectionsCount: collections.length });
     return { categories, types };
-  }, [products]);
+  }, [collections, products]);
+
+  // Ensure consistent rendering between server and client
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
@@ -155,28 +180,108 @@ export function ProductList({
     <div className={className}>
       {/* Header with Search and View Controls */}
       <div className="mb-6 space-y-4">
-        {/* Search and View Controls */}
+        {/* Search, Filter, and View Controls */}
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          <div className="flex flex-1 gap-4 items-center">
           {showSearch && (
             <div className="flex-1 max-w-md">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => {
-                    console.log('🔍 Search input changed:', e.target.value);
-                    handleSearch(e.target.value);
-                  }}
-                  onKeyDown={(e) => {
-                    console.log('🔍 Search key pressed:', e.key);
-                  }}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                />
-              </div>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search products..."
+                    value={searchQuery}
+                    onChange={(e) => {
+                      console.log('🔍 Search input changed:', e.target.value);
+                      handleSearch(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                      console.log('🔍 Search key pressed:', e.key);
+                    }}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              />
             </div>
-          )}
+              </div>
+            )}
+            
+            {showFilters && isClient && (
+              <>
+                <div className="relative">
+                  <select
+                    value={activeFilters.categories[0] || ''}
+                    onChange={(e) => {
+                      const selectedCategory = e.target.value;
+                      if (selectedCategory) {
+                        handleFilterChange({
+                          categories: [selectedCategory],
+                          types: activeFilters.types
+                        });
+                      } else {
+                        handleFilterChange({
+                          categories: [],
+                          types: activeFilters.types
+                        });
+                      }
+                    }}
+                    className="appearance-none pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white"
+                    title="Filter by category"
+                    aria-label="Filter products by category"
+                  >
+                    <option value="">All Categories</option>
+                    {availableFilters.categories.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                </div>
+                
+                <div className="relative">
+                  <select
+                    value={activeFilters.types[0] || ''}
+                    onChange={(e) => {
+                      const selectedType = e.target.value;
+                      if (selectedType) {
+                        handleFilterChange({
+                          categories: activeFilters.categories,
+                          types: [selectedType]
+                        });
+                      } else {
+                        handleFilterChange({
+                          categories: activeFilters.categories,
+                          types: []
+                        });
+                      }
+                    }}
+                    className="appearance-none pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white"
+                    title="Filter by type"
+                    aria-label="Filter products by type"
+                  >
+                    <option value="">All Types</option>
+                    {availableFilters.types.map((type) => (
+                      <option key={type} value={type}>
+                        {type.replace('-', ' ')}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                </div>
+              </>
+            )}
+            
+            {/* Clear Filters Button */}
+            {isClient && (activeFilters.categories.length > 0 || activeFilters.types.length > 0) && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleClearFilters}
+                className="text-sm"
+              >
+                Clear Filters
+              </Button>
+            )}
+          </div>
           
           <div className="flex items-center gap-2">
             {/* View Mode Toggle */}
@@ -247,15 +352,26 @@ export function ProductList({
                 className="flex items-center gap-4 p-4 border rounded-lg hover:shadow-md transition-shadow cursor-pointer"
                 onClick={() => handleProductClick(product)}
               >
+                {product.images && product.images.length > 0 ? (
                 <img
                   src={product.images[0]}
                   alt={product.name}
                   className="w-20 h-20 object-cover rounded-lg"
                 />
+                ) : (
+                  <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <div className="text-center">
+                      <svg className="w-8 h-8 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <p className="text-xs text-gray-500 mt-1">No Image</p>
+                    </div>
+                  </div>
+                )}
                 <div className="flex-1">
                   <h3 className="font-semibold text-lg">{product.name}</h3>
                   <p className="text-gray-600 text-sm">{product.description}</p>
-                  <p className="text-primary font-semibold">₦{product.price.toLocaleString()}</p>
+                  <p className="text-primary font-semibold">{formatPrice(product.price)}</p>
                 </div>
               </div>
             ))}
@@ -290,16 +406,7 @@ export function ProductList({
         </div>
       )}
 
-      {/* Filter Sidebar */}
-      {showFilters && (
-        <FilterSidebar
-          isOpen={showFilterSidebar}
-          onClose={() => setShowFilterSidebar(false)}
-          filters={availableFilters}
-          selectedFilters={activeFilters}
-          onFilterChange={handleFilterChange}
-        />
-      )}
+
 
       {/* Product Modal */}
       <ProductModal

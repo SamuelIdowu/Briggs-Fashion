@@ -7,20 +7,17 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
+import { formatPrice } from '@/lib/utils';
 
 const emptyProduct = {
   name: '',
   description: '',
-  category: 'traditional',
+  category: '',
   type: 'ready-made',
   images: [],
   price: 0,
 };
 
-const CATEGORY_OPTIONS = [
-  { value: 'traditional', label: 'Traditional' },
-  { value: 'casual', label: 'Casual' },
-];
 const TYPE_OPTIONS = [
   { value: 'ready-made', label: 'Ready-made' },
   { value: 'made-to-order', label: 'Made-to-order' },
@@ -28,6 +25,7 @@ const TYPE_OPTIONS = [
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
+  const [collections, setCollections] = useState<any[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -36,7 +34,18 @@ export default function AdminProductsPage() {
 
   useEffect(() => {
     fetchProducts();
+    fetchCollections();
   }, []);
+
+  function fetchCollections() {
+    fetch('/api/collections')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setCollections(data.data.collections || []);
+        }
+      });
+  }
 
   function fetchProducts() {
     fetch('/api/admin/products')
@@ -69,7 +78,7 @@ export default function AdminProductsPage() {
     });
     
     if (response.ok) {
-      fetchProducts();
+    fetchProducts();
     }
   }
 
@@ -144,10 +153,10 @@ export default function AdminProductsPage() {
     });
     
     if (response.ok) {
-      setModalOpen(false);
+    setModalOpen(false);
       setUploadedFiles([]);
       setImagePreviewUrls([]);
-      fetchProducts();
+    fetchProducts();
     }
   }
 
@@ -174,13 +183,17 @@ export default function AdminProductsPage() {
                   {product.images && product.images.length > 0 ? (
                     <img src={product.images[0]} alt={product.name} className="h-12 w-12 object-cover rounded" />
                   ) : (
-                    <span className="text-xs text-gray-400">No image</span>
+                    <div className="h-12 w-12 bg-gray-100 rounded flex items-center justify-center">
+                      <svg className="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
                   )}
                 </td>
                 <td className="border px-4 py-2">{product.name}</td>
                 <td className="border px-4 py-2">{product.category}</td>
                 <td className="border px-4 py-2">{product.type}</td>
-                <td className="border px-4 py-2">{product.price}</td>
+                <td className="border px-4 py-2">{formatPrice(product.price)}</td>
                 <td className="border px-4 py-2">
                   <Button variant="outline" size="sm" className="mr-2" onClick={() => handleEdit(product)}>Edit</Button>
                   <Button variant="outline" size="sm" className="text-red-600" onClick={() => handleDelete(product._id || product.id)}>Delete</Button>
@@ -229,10 +242,13 @@ export default function AdminProductsPage() {
                       onChange={e => setEditingProduct({ ...editingProduct, category: e.target.value })}
                       required
                     >
-                      {CATEGORY_OPTIONS.map(opt => (
-                        <option key={opt.value} value={opt.value}>{opt.label}</option>
-                      ))}
-                    </select>
+                <option value="">Select a collection</option>
+                {collections.map(collection => (
+                  <option key={collection._id} value={collection.name}>
+                    {collection.name}
+                  </option>
+                ))}
+              </select>
                   </div>
 
                   <div>
@@ -244,10 +260,10 @@ export default function AdminProductsPage() {
                       onChange={e => setEditingProduct({ ...editingProduct, type: e.target.value })}
                       required
                     >
-                      {TYPE_OPTIONS.map(opt => (
-                        <option key={opt.value} value={opt.value}>{opt.label}</option>
-                      ))}
-                    </select>
+                {TYPE_OPTIONS.map(opt => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
                   </div>
                 </div>
 

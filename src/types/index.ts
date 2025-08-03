@@ -3,7 +3,7 @@ export interface Product {
   id: string;
   name: string;
   description: string;
-  category: 'traditional' | 'casual' | 'custom';
+  category: string;
   type: 'ready-made' | 'made-to-order';
   images: string[]; // 2-4 images per product
   price: number;

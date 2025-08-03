@@ -70,12 +70,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Convert price to kobo (smallest currency unit)
-    const priceInKobo = Math.round(parseFloat(price) * 100);
-
     const product = new Product({
       ...body,
-      price: priceInKobo,
+      price: parseFloat(price),
       images: body.images || [],
       variations: {
         sizes: body.variations?.sizes || [],

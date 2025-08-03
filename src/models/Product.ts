@@ -3,7 +3,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IProduct extends Document {
   name: string;
   description: string;
-  category: 'traditional' | 'casual';
+  category: string;
   type: 'ready-made' | 'made-to-order';
   images: string[];
   price: number;
@@ -40,7 +40,6 @@ const productSchema = new Schema<IProduct>({
   },
   category: {
     type: String,
-    enum: ['traditional', 'casual'],
     required: [true, 'Product category is required'],
   },
   type: {
@@ -130,7 +129,7 @@ productSchema.virtual('formattedPrice').get(function() {
   return new Intl.NumberFormat('en-NG', {
     style: 'currency',
     currency: 'NGN',
-  }).format(this.price / 100);
+  }).format(this.price);
 });
 
 // Ensure virtuals are serialized

@@ -54,7 +54,7 @@ export default function ProductsPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <ProductList 
             initialFilters={initialFilters}
-            showFilters={false}
+            showFilters={true}
             showSearch={true}
             showPagination={true}
             layout="grid"

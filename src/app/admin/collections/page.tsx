@@ -14,7 +14,8 @@ import {
   Search,
   Filter,
   Eye,
-  EyeOff
+  EyeOff,
+  RefreshCw
 } from "lucide-react";
 
 interface Collection {
@@ -158,10 +159,16 @@ export default function AdminCollectionsPage() {
               Manage your product collections and categories
             </p>
           </div>
-          <Button onClick={handleAdd}>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Collection
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={fetchCollections}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Refresh
+            </Button>
+            <Button onClick={handleAdd}>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Collection
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -231,7 +238,7 @@ export default function AdminCollectionsPage() {
                         {collection.description || "No description"}
                       </p>
                       <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                        <span>{collection.productCount || collection.products?.length || 0} products</span>
+                        <span className="font-medium text-blue-600">{collection.productCount || 0} products</span>
                         <span>•</span>
                         <span>Created {formatDate(collection.createdAt)}</span>
                       </div>

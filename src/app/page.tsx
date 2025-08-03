@@ -32,8 +32,8 @@ export default function Home() {
   }, []);
 
   const collections = [
-    { name: 'Traditional Wear', href: '/products?category=traditional', image: '/inspo1.jpg', hint: 'traditional clothing' },
-    { name: 'Casual Wear', href: '/products?category=casual', image: '/inspo2.jpg', hint: 'casual fashion' },
+    { name: 'Traditional Collection', href: '/products?category=Traditional Collection', image: '/inspo1.jpg', hint: 'traditional clothing' },
+    { name: 'Casual Collection', href: '/products?category=Casual Collection', image: '/inspo2.jpg', hint: 'casual fashion' },
   ];
 
   const handleProductClick = (product: Product) => {

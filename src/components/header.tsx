@@ -14,8 +14,6 @@ export function Header() {
   
   const navItems = [
     { href: "/products", label: "All Products" },
-    { href: "/products?category=traditional", label: "Traditional" },
-    { href: "/products?category=casual", label: "Casual" },
     { href: "/about", label: "About Us" },
     { href: "/size-guide", label: "Size Guide" },
     { href: "/contact", label: "Contact" },
@@ -24,9 +22,7 @@ export function Header() {
   const NavLinks = ({ className }: { className?: string }) => (
     <nav className={cn("flex items-center gap-4 lg:gap-6", className)}>
       {(navItems || []).map((item) => {
-        const isActive = item.href.includes('?') 
-          ? pathname === item.href.split('?')[0] && searchParams.get('category') === item.href.split('?')[1].split('=')[1]
-          : pathname === item.href;
+        const isActive = pathname === item.href;
           
         return (
           <Link

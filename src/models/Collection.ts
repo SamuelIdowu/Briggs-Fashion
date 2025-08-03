@@ -34,7 +34,7 @@ const collectionSchema = new Schema<ICollection>({
 // Index for filtering
 collectionSchema.index({ isActive: 1 });
 
-// Virtual for product count
+// Virtual for product count - this will be overridden by API logic
 collectionSchema.virtual('productCount').get(function() {
   return this.products.length;
 });

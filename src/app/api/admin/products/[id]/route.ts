@@ -49,17 +49,11 @@ export async function PUT(
       );
     }
 
-    // Convert price to kobo if it's a number
-    let priceInKobo = body.price;
-    if (typeof body.price === 'number' && body.price > 0) {
-      priceInKobo = Math.round(body.price * 100);
-    }
-
     const updatedProduct = await Product.findByIdAndUpdate(
       params.id,
       {
         ...body,
-        price: priceInKobo,
+        price: parseFloat(body.price),
         images: body.images || [],
         variations: {
           sizes: body.variations?.sizes || [],

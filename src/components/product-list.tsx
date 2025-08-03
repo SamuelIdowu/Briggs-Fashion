@@ -179,7 +179,7 @@ export function ProductList({
   return (
     <div className={className}>
       {/* Header with Search and View Controls */}
-      <div className="mb-6 space-y-4">
+      <div className="mb-6 space-y-4 px-2 sm:px-0">
         {/* Search, Filter, and View Controls */}
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div className="flex flex-1 gap-4 items-center">

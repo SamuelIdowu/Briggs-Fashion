@@ -61,7 +61,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/40" />
         
         {/* Content */}
-        <div className="relative z-10 container mx-auto flex h-full flex-col items-center justify-center text-center">
+        <div className="relative z-10 container mx-auto flex h-full flex-col items-center justify-center text-center px-6 sm:px-8">
           <h1 className="text-4xl font-bold md:text-6xl drop-shadow-lg font-headline">The Essence of Nigerian Elegance</h1>
           <p className="mt-4 max-w-2xl text-lg md:text-xl drop-shadow-md">
             Experience unparalleled craftsmanship with our exclusive collection of traditional and modern menswear.
@@ -74,7 +74,7 @@ export default function Home() {
 
       {/* Collections Section */}
       <section className="py-16 sm:py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto px-6 sm:px-8 lg:px-12">
           <h2 className="text-3xl font-bold tracking-tight text-center font-headline">Our Collections</h2>
           <div className="mt-10 grid grid-cols-1 gap-y-10 sm:grid-cols-2 lg:gap-x-8">
             {collections.map((collection) => (

@@ -162,7 +162,7 @@ export default function AdminProductsPage() {
 
   return (
     <AdminAuthGuard>
-      <div className="container mx-auto py-8">
+      <div className="container mx-auto py-6 px-4 sm:px-6">
         <h1 className="text-2xl font-bold mb-4">Products</h1>
         <Button className="mb-4" onClick={handleAdd}>Add Product</Button>
         <table className="min-w-full border">

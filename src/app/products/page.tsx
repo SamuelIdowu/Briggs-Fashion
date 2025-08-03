@@ -41,7 +41,7 @@ export default function ProductsPage() {
         <div className="absolute inset-0 bg-black/40" />
         
         {/* Content */}
-        <div className="relative z-10 container mx-auto flex h-full flex-col items-center justify-center text-center">
+        <div className="relative z-10 container mx-auto flex h-full flex-col items-center justify-center text-center px-6 sm:px-8">
           <h1 className="text-4xl font-bold md:text-6xl drop-shadow-lg">Our Collection</h1>
           <p className="mt-4 max-w-2xl text-lg md:text-xl drop-shadow-md">
             Browse our curated selection of fine menswear, crafted with passion and precision.
@@ -51,7 +51,7 @@ export default function ProductsPage() {
 
       {/* Main Content */}
       <section className="py-16 sm:py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto px-6 sm:px-8 lg:px-12">
           <ProductList 
             initialFilters={initialFilters}
             showFilters={true}

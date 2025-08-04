@@ -5,11 +5,12 @@ import Product from '@/models/Product';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     await dbConnect();
-    const collection = await Collection.findById(params.id).populate('products');
+    const collection = await Collection.findById(id).populate('products');
     if (!collection) {
       return NextResponse.json(
         { error: 'Collection not found' },

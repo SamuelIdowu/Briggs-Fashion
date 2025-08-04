@@ -4,12 +4,13 @@ import Collection from '@/models/Collection';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
+  const { id } = context.params;
   try {
     await dbConnect();
     
-    const collection = await Collection.findById(params.id)
+    const collection = await Collection.findById(id)
       .populate('products', 'name images price category type');
     
     if (!collection) {
@@ -34,8 +35,9 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     await dbConnect();
     
@@ -51,7 +53,7 @@ export async function PUT(
     }
 
     const updatedCollection = await Collection.findByIdAndUpdate(
-      params.id,
+      id,
       {
         name,
         description: body.description || '',
@@ -83,12 +85,13 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     await dbConnect();
     
-    const collection = await Collection.findByIdAndDelete(params.id);
+    const collection = await Collection.findByIdAndDelete(id);
     
     if (!collection) {
       return NextResponse.json(

@@ -28,7 +28,18 @@ export default function Home() {
   useEffect(() => {
     fetch('/api/products?limit=4')
       .then(res => res.json())
-      .then(data => setFeaturedProducts(data.products));
+      .then(data => {
+        if (data.products && Array.isArray(data.products)) {
+          setFeaturedProducts(data.products);
+        } else {
+          console.error('Invalid products data:', data);
+          setFeaturedProducts([]);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching products:', error);
+        setFeaturedProducts([]);
+      });
   }, []);
 
   const collections = [
@@ -102,13 +113,19 @@ export default function Home() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold tracking-tight text-center font-headline">Featured Products</h2>
           <div className="mt-10 grid grid-cols-1 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 sm:gap-x-6 lg:gap-x-8">
-            {featuredProducts.map((product) => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                onClick={() => handleProductClick(product)}
-              />
-            ))}
+            {featuredProducts && featuredProducts.length > 0 ? (
+              featuredProducts.map((product) => (
+                <ProductCard 
+                  key={product.id} 
+                  product={product} 
+                  onClick={() => handleProductClick(product)}
+                />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-8">
+                <p className="text-muted-foreground">No featured products available at the moment.</p>
+              </div>
+            )}
           </div>
           <div className="mt-12 text-center">
             <Button asChild size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">

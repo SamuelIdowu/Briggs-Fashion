@@ -4,12 +4,13 @@ import Product from '@/models/Product';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     await dbConnect();
     
-    const product = await Product.findById(params.id);
+    const product = await Product.findById(id);
     
     if (!product) {
       return NextResponse.json(
@@ -33,8 +34,9 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     await dbConnect();
     
@@ -50,7 +52,7 @@ export async function PUT(
     }
 
     const updatedProduct = await Product.findByIdAndUpdate(
-      params.id,
+      id,
       {
         ...body,
         price: parseFloat(body.price),
@@ -96,12 +98,13 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     await dbConnect();
     
-    const product = await Product.findByIdAndDelete(params.id);
+    const product = await Product.findByIdAndDelete(id);
     
     if (!product) {
       return NextResponse.json(

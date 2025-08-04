@@ -7,11 +7,12 @@ import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface ProductPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/products/${params.id}`, { cache: 'no-store' });
+  const { id } = await params;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/products/${id}`, { cache: 'no-store' });
   if (!res.ok) notFound();
   const { product } = await res.json();
 
@@ -32,7 +33,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <p className="text-lg text-muted-foreground">{product.description}</p>
           
           <div className="space-y-4">
-            <WhatsAppButton product={product} />
+            <WhatsAppButton 
+              message={{
+                type: 'ready-made',
+                productName: product.name
+              }}
+            >
+              Inquire on WhatsApp
+            </WhatsAppButton>
             <p className="text-center text-sm text-muted-foreground">Have questions? Inquire on WhatsApp for a personal consultation.</p>
           </div>
 

@@ -25,8 +25,8 @@ interface ProductContextType {
   
   // Product actions
   getProduct: (id: string) => Promise<Product | null>;
-  getProductsByCategory: (category: string) => Promise<Product[]>;
-  getProductsByType: (type: string) => Promise<Product[]>;
+  getProductsByCategory: (category: string) => Promise<void>;
+  getProductsByType: (type: string) => Promise<void>;
   
   // Refresh functions
   refreshFeaturedProducts: () => void;
@@ -57,8 +57,11 @@ export function ProductProvider({ children }: ProductProviderProps) {
   const loadFeaturedProducts = async () => {
     try {
       setLoadingFeatured(true);
-      const products = await getFeaturedProducts(4);
-      setFeaturedProducts(products);
+      const response = await fetch('/api/products?isFeatured=true&limit=4');
+      if (response.ok) {
+        const data = await response.json();
+        setFeaturedProducts(data.products);
+      }
     } catch (error) {
       console.error('Failed to load featured products:', error);
     } finally {

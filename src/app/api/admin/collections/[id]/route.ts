@@ -4,9 +4,9 @@ import Collection from '@/models/Collection';
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = context.params;
+  const { id } = await params;
   try {
     await dbConnect();
     

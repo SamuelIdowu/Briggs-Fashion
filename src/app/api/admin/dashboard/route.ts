@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/database';
 import Product from '@/models/Product';
 import Collection from '@/models/Collection';
-import SiteSettings from '@/models/SiteSettings';
 
 export async function GET(request: NextRequest) {
   try {
@@ -48,9 +47,6 @@ export async function GET(request: NextRequest) {
       }
     ]);
 
-    // Get site settings
-    const settings = await SiteSettings.getSettings();
-
     return NextResponse.json({
       success: true,
       data: {
@@ -65,11 +61,6 @@ export async function GET(request: NextRequest) {
         recentCollections,
         categoryStats,
         typeStats,
-        settings: {
-          businessName: settings.businessInfo.name,
-          businessAddress: settings.businessInfo.address,
-          businessPhone: settings.businessInfo.phone,
-        }
       }
     });
   } catch (error) {

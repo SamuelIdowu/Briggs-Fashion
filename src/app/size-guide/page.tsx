@@ -60,7 +60,8 @@ export default function SizeGuidePage() {
   const handleWhatsAppClick = () => {
     const message = "Hello! I need help with sizing for your products. Can you assist me?";
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${siteSettings.businessInfo.whatsappNumbers.support.replace(/\D/g, '')}?text=${encodedMessage}`;
+    const whatsappNumber = siteSettings.businessInfo.whatsappNumbers[0]; // Use first number as support
+    const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
   };
 

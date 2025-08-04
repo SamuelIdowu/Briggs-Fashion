@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 declare global {
   // eslint-disable-next-line no-var
-  var mongoose: { conn: typeof mongoose | null; promise: Promise<typeof mongoose> | null } | undefined;
+  var mongoose: { conn: any; promise: any } | undefined;
 }
 
 const MONGODB_URI = process.env.MONGODB_URI_PROD || process.env.MONGODB_URI;

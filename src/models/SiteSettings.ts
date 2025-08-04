@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Model } from 'mongoose';
 
 export interface ISiteSettings extends Document {
   businessInfo: {
@@ -114,4 +114,9 @@ siteSettingsSchema.statics.getSettings = async function() {
   return settings;
 };
 
-export default mongoose.models.SiteSettings || mongoose.model<ISiteSettings>('SiteSettings', siteSettingsSchema); 
+// Define the interface for the model with static methods
+interface ISiteSettingsModel extends Model<ISiteSettings> {
+  getSettings(): Promise<ISiteSettings>;
+}
+
+export default mongoose.models.SiteSettings || mongoose.model<ISiteSettings, ISiteSettingsModel>('SiteSettings', siteSettingsSchema); 

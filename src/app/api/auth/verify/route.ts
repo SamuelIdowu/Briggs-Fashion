@@ -20,7 +20,12 @@ export async function GET(request: NextRequest) {
 
     try {
       // Verify JWT token
-      const decoded = verify(token, process.env.JWT_SECRET || 'your-secret-key') as any;
+      const jwtSecret = process.env.JWT_SECRET;
+      if (!jwtSecret) {
+        throw new Error('JWT_SECRET environment variable is not set');
+      }
+      
+      const decoded = verify(token, jwtSecret) as any;
       
       // Find user in database
       const user = await User.findById(decoded.userId).select('-password');

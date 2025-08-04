@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sign } from 'jsonwebtoken';
+import { sign, SignOptions } from 'jsonwebtoken';
 import dbConnect from '@/lib/database';
 import User from '@/models/User';
 
@@ -46,14 +46,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate JWT token
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      throw new Error('JWT_SECRET environment variable is not set');
+    }
+    
     const token = sign(
       { 
         userId: user._id, 
         email: user.email, 
         role: user.role 
       },
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
+      jwtSecret
     );
 
     // Return user data (without password)

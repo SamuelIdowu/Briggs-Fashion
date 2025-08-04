@@ -7,7 +7,11 @@ export async function GET(request: NextRequest) {
   try {
     await dbConnect();
     
-    const settings = await SiteSettings.getSettings();
+    let settings = await SiteSettings.findOne();
+    
+    if (!settings) {
+      settings = await SiteSettings.create({});
+    }
     
     return NextResponse.json({ settings });
     

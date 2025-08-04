@@ -5,10 +5,10 @@ declare global {
   var mongoose: { conn: typeof mongoose | null; promise: Promise<typeof mongoose> | null } | undefined;
 }
 
-const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGODB_URI_PROD;
+const MONGODB_URI = process.env.MONGODB_URI_PROD || process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+  throw new Error('Please define the MONGODB_URI_PROD or MONGODB_URI environment variable inside .env.local');
 }
 
 

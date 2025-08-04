@@ -26,13 +26,19 @@ export default function AdminLoginPage() {
     setIsLoading(true);
 
     try {
+      console.log('Attempting login with:', { email, password: '***' });
       const success = await login(email, password);
+      console.log('Login result:', success);
+      
       if (success) {
+        console.log('Login successful, redirecting to admin...');
         router.push('/admin');
       } else {
+        console.log('Login failed, showing error');
         setError('Invalid credentials. Please try again.');
       }
     } catch (err) {
+      console.error('Login error in component:', err);
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);

@@ -1,10 +1,16 @@
+import { config } from 'dotenv';
+import path from 'path';
+
+// Load .env.local file FIRST
+config({ path: path.resolve(process.cwd(), '.env.local') });
+
+// Now import after environment is loaded
 import dbConnect from '../src/lib/database';
 import User from '../src/models/User';
 import Product from '../src/models/Product';
 import Collection from '../src/models/Collection';
 import SiteSettings from '../src/models/SiteSettings';
 import { products, collections, siteSettings } from '../src/lib/data';
-import 'dotenv/config';
 
 
 console.log('MONGODB_URI:', process.env.MONGODB_URI);

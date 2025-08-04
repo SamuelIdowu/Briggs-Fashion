@@ -79,8 +79,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setUser(data.user);
         return true;
       } else {
-        const error = await response.json();
-        throw new Error(error.message || 'Login failed');
+        const errorData = await response.json();
+        console.error('Login API error:', errorData);
+        throw new Error(errorData.error || 'Login failed');
       }
     } catch (error) {
       console.error('Login error:', error);

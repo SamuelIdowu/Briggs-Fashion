@@ -69,7 +69,7 @@ async function dbConnect(retryCount = 0) {
     try {
       const db = cached!.conn.connection.db;
       const collections = await db.listCollections().toArray();
-      console.log('📋 Available collections:', collections.map(c => c.name));
+      console.log('📋 Available collections:', collections.map((c: any) => c.name));
     } catch (e) {
       console.log('ℹ️ Database may be empty, collections will be created on first use');
     }

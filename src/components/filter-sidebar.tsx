@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
 
 interface FilterSidebarProps {
@@ -52,8 +52,9 @@ export function FilterSidebar({
 
   // Handler for Apply button
   const handleApply = () => {
+    console.log('🔧 FilterSidebar: Applying filters:', localFilters);
     onFilterChange(localFilters);
-    // Optionally: onClose(); // if you want to close after applying
+    onClose(); // Close the sidebar after applying filters
   };
 
   const handleCategoryChange = (category: string, checked: boolean) => {
@@ -163,19 +164,8 @@ export function FilterSidebar({
 
   return (
     <div className={className}>
-      {/* Mobile Filter Button */}
-      <Sheet open={isOpen} onOpenChange={onClose}>
-        <SheetTrigger asChild>
-          <Button variant="outline" className="lg:hidden w-full">
-            <Filter className="mr-2 h-4 w-4" />
-            Filters
-            {activeFiltersCount > 0 && (
-              <Badge variant="secondary" className="ml-2 h-5 w-5 p-0 text-xs">
-                {activeFiltersCount}
-              </Badge>
-            )}
-          </Button>
-        </SheetTrigger>
+      {/* Filter Sidebar */}
+      <Sheet open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
         <SheetContent side="left" className="w-80">
           <SheetHeader>
             <SheetTitle>Filters</SheetTitle>
@@ -185,19 +175,6 @@ export function FilterSidebar({
           </div>
         </SheetContent>
       </Sheet>
-
-      {/* Desktop Filter Sidebar */}
-      <div className="hidden lg:block w-64 space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Filters</h2>
-          {activeFiltersCount > 0 && (
-            <Button variant="ghost" size="sm" onClick={clearAllFilters}>
-              Clear All
-            </Button>
-          )}
-        </div>
-        <FilterContent />
-      </div>
     </div>
   );
 } 

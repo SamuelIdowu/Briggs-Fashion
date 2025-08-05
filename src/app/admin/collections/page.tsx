@@ -1,18 +1,14 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { 
   Plus,
   Edit,
   Trash2,
   Search,
-  RefreshCw
+  RefreshCw,
+  Filter,
+  X
 } from "lucide-react";
 
 interface Product {
@@ -40,6 +36,9 @@ export default function AdminCollectionsPage() {
   const [editingCollection, setEditingCollection] = useState<Collection | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterActive, setFilterActive] = useState<boolean | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [sortBy, setSortBy] = useState<'name' | 'createdAt' | 'productCount'>('createdAt');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   useEffect(() => {
     fetchCollections();
@@ -124,11 +123,45 @@ export default function AdminCollectionsPage() {
     }
   };
 
-  const filteredCollections = collections.filter(collection => {
+  const clearFilters = () => {
+    setSearchTerm("");
+    setFilterActive(null);
+    setSortBy('createdAt');
+    setSortOrder('desc');
+  };
+
+  const filteredAndSortedCollections = collections
+    .filter(collection => {
     const matchesSearch = collection.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          collection.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = filterActive === null || collection.isActive === filterActive;
     return matchesSearch && matchesFilter;
+    })
+    .sort((a, b) => {
+      let aValue: any, bValue: any;
+      
+      switch (sortBy) {
+        case 'name':
+          aValue = a.name.toLowerCase();
+          bValue = b.name.toLowerCase();
+          break;
+        case 'createdAt':
+          aValue = new Date(a.createdAt).getTime();
+          bValue = new Date(b.createdAt).getTime();
+          break;
+        case 'productCount':
+          aValue = a.products?.length || 0;
+          bValue = b.products?.length || 0;
+          break;
+        default:
+          return 0;
+      }
+      
+      if (sortOrder === 'asc') {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
   });
 
   const formatDate = (dateString: string) => {
@@ -165,184 +198,288 @@ export default function AdminCollectionsPage() {
             </p>
           </div>
           <div className="flex gap-2">
-            <Button 
-              variant="outline"
+            <button 
+              className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center"
               onClick={fetchCollections}
             >
               <RefreshCw className="mr-2 h-4 w-4" />
               Refresh
-            </Button>
-            <Button 
+            </button>
+            <button 
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center"
               onClick={handleAdd}
             >
               <Plus className="mr-2 h-4 w-4" />
               Add Collection
-            </Button>
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Filters */}
-      <Card className="mb-6">
-        <CardContent className="p-6">
+      {/* Search and Filter Button */}
+      <div className="bg-white border rounded-lg mb-6 p-6">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  type="text"
+              <input
+                type="text"
                   placeholder="Search collections..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
-            <div className="flex gap-2">
-              <Button
-                variant={filterActive === null ? "default" : "outline"}
-                size="sm"
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center gap-2"
+            title="Open filters sidebar"
+            aria-label="Open filters sidebar"
+          >
+            <Filter className="h-4 w-4" />
+            Filters
+          </button>
+        </div>
+      </div>
+
+      {/* Filter Sidebar */}
+      {showFilters && (
+        <div className="fixed inset-0 z-50 flex">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50"
+            onClick={() => setShowFilters(false)}
+          />
+          
+          {/* Sidebar */}
+          <div className="relative w-80 max-w-[90vw] h-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out">
+            <div className="flex flex-col h-full">
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
+                <button
+                  onClick={() => setShowFilters(false)}
+                  className="p-2 text-gray-400 hover:text-gray-600 rounded-md"
+                  title="Close filters"
+                  aria-label="Close filters"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              {/* Filter Content */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-6">
+                {/* Status Filter */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 mb-3">Status</h4>
+                  <div className="space-y-2">
+                    <button
+                      className={`w-full text-left px-3 py-2 text-sm rounded-md ${
+                        filterActive === null 
+                          ? "bg-blue-600 text-white" 
+                          : "border border-gray-300 hover:bg-gray-50"
+                      }`}
                 onClick={() => setFilterActive(null)}
               >
-                All
-              </Button>
-              <Button
-                variant={filterActive === true ? "default" : "outline"}
-                size="sm"
+                      All ({collections.length})
+                    </button>
+                    <button
+                      className={`w-full text-left px-3 py-2 text-sm rounded-md ${
+                        filterActive === true 
+                          ? "bg-blue-600 text-white" 
+                          : "border border-gray-300 hover:bg-gray-50"
+                      }`}
                 onClick={() => setFilterActive(true)}
               >
-                Active
-              </Button>
-              <Button
-                variant={filterActive === false ? "default" : "outline"}
-                size="sm"
+                      Active ({collections.filter(c => c.isActive).length})
+                    </button>
+                    <button
+                      className={`w-full text-left px-3 py-2 text-sm rounded-md ${
+                        filterActive === false 
+                          ? "bg-blue-600 text-white" 
+                          : "border border-gray-300 hover:bg-gray-50"
+                      }`}
                 onClick={() => setFilterActive(false)}
               >
-                Inactive
-              </Button>
+                      Inactive ({collections.filter(c => !c.isActive).length})
+                    </button>
+                  </div>
+                </div>
+                
+                {/* Sort Options */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 mb-3">Sort By</h4>
+                  <div className="space-y-3">
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value as 'name' | 'createdAt' | 'productCount')}
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      title="Sort by field"
+                      aria-label="Sort by field"
+                    >
+                      <option value="createdAt">Date Created</option>
+                      <option value="name">Name</option>
+                      <option value="productCount">Product Count</option>
+                    </select>
+                    <button
+                      onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50 flex items-center justify-center gap-2"
+                      title={`Sort ${sortOrder === 'asc' ? 'Descending' : 'Ascending'}`}
+                    >
+                      {sortOrder === 'asc' ? '↑' : '↓'}
+                      {sortOrder === 'asc' ? 'Ascending' : 'Descending'}
+                    </button>
+                  </div>
+                </div>
+                
+                {/* Results Summary */}
+                <div className="pt-4 border-t border-gray-200">
+                  <div className="text-sm text-gray-500 mb-3">
+                    Showing {filteredAndSortedCollections.length} of {collections.length} collections
+                    {searchTerm && ` matching "${searchTerm}"`}
+                    {filterActive !== null && ` (${filterActive ? 'Active' : 'Inactive'} only)`}
+                  </div>
+                  {(searchTerm || filterActive !== null || sortBy !== 'createdAt' || sortOrder !== 'desc') && (
+                    <button
+                      onClick={clearFilters}
+                      className="w-full px-3 py-2 text-sm text-blue-600 hover:text-blue-800 border border-blue-600 rounded-md hover:bg-blue-50"
+                    >
+                      Clear All Filters
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      )}
 
       {/* Collections List */}
       <div className="space-y-4">
-        {filteredCollections.map((collection) => (
-          <Card key={collection._id}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {collection.name}
-                    </h3>
-                    <Badge variant={collection.isActive ? "default" : "secondary"}>
-                      {collection.isActive ? "Active" : "Inactive"}
-                    </Badge>
-                  </div>
-                  <p className="text-gray-600 mt-1">{collection.description}</p>
-                  <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                    <span>{collection.products?.length || 0} products</span>
-                    <span>Created {formatDate(collection.createdAt)}</span>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleEdit(collection)}
-                    title="Edit collection"
-                    aria-label="Edit collection"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDelete(collection._id)}
-                    title="Delete collection"
-                    aria-label="Delete collection"
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+        {filteredAndSortedCollections.map((collection) => (
+          <div key={collection._id} className="bg-white border rounded-lg p-6">
+                <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                <div className="flex items-center gap-3">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    {collection.name}
+                  </h3>
+                  <span className={`px-2 py-1 text-xs rounded-full ${
+                    collection.isActive 
+                      ? "bg-green-100 text-green-800" 
+                      : "bg-gray-100 text-gray-800"
+                  }`}>
+                          {collection.isActive ? "Active" : "Inactive"}
+                  </span>
+                      </div>
+                <p className="text-gray-600 mt-1">{collection.description}</p>
+                <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                  <span>{collection.products?.length || 0} products</span>
+                        <span>Created {formatDate(collection.createdAt)}</span>
+                      </div>
+                    </div>
+              <div className="flex gap-2">
+                <button
+                      onClick={() => handleEdit(collection)}
+                  className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md"
+                  title="Edit collection"
+                  aria-label="Edit collection"
+                    >
+                      <Edit className="h-4 w-4" />
+                </button>
+                <button
+                      onClick={() => handleDelete(collection._id)}
+                  className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md"
+                  title="Delete collection"
+                  aria-label="Delete collection"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                </button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ))}
       </div>
 
       {/* Modal */}
       {modalOpen && editingCollection && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <Card className="w-full max-w-md">
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">
-                {editingCollection._id ? 'Edit Collection' : 'Add Collection'}
-              </h2>
-              <form onSubmit={handleSave}>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      id="name"
-                      type="text"
-                      value={editingCollection.name}
-                      onChange={(e) => setEditingCollection({
-                        ...editingCollection,
-                        name: e.target.value
-                      })}
-                      placeholder="Enter collection name"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="description">Description</Label>
-                    <Textarea
-                      id="description"
-                      value={editingCollection.description}
-                      onChange={(e) => setEditingCollection({
-                        ...editingCollection,
-                        description: e.target.value
-                      })}
-                      rows={3}
-                      placeholder="Enter collection description"
-                    />
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      id="isActive"
-                      checked={editingCollection.isActive}
-                      onChange={(e) => setEditingCollection({
-                        ...editingCollection,
-                        isActive: e.target.checked
-                      })}
-                      className="rounded border-gray-300"
-                    />
-                    <Label htmlFor="isActive">Active</Label>
-                  </div>
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h2 className="text-xl font-semibold mb-4">
+              {editingCollection._id ? 'Edit Collection' : 'Add Collection'}
+            </h2>
+            <form onSubmit={handleSave}>
+              <div className="space-y-4">
+              <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                    Name
+                  </label>
+                  <input
+                  id="name"
+                    type="text"
+                  value={editingCollection.name}
+                  onChange={(e) => setEditingCollection({
+                    ...editingCollection,
+                    name: e.target.value
+                  })}
+                    placeholder="Enter collection name"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div>
+                  <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                    Description
+                  </label>
+                  <textarea
+                  id="description"
+                  value={editingCollection.description}
+                  onChange={(e) => setEditingCollection({
+                    ...editingCollection,
+                    description: e.target.value
+                  })}
+                  rows={3}
+                    placeholder="Enter collection description"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="isActive"
+                  checked={editingCollection.isActive}
+                  onChange={(e) => setEditingCollection({
+                    ...editingCollection,
+                    isActive: e.target.checked
+                  })}
+                    className="rounded border-gray-300"
+                />
+                  <label htmlFor="isActive" className="text-sm font-medium text-gray-700">
+                    Active
+                  </label>
                 </div>
-                <div className="flex gap-2 mt-6">
-                  <Button type="submit" className="flex-1">
-                    Save
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="flex-1"
-                    onClick={() => {
-                      setModalOpen(false);
-                      setEditingCollection(null);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+              </div>
+              <div className="flex gap-2 mt-6">
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setModalOpen(false);
+                    setEditingCollection(null);
+                  }}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

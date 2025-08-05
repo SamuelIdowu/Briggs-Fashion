@@ -11,6 +11,8 @@
     "seed": "tsx scripts/seed.ts",
     "db:seed": "npm run seed",
     "db:reset": "npm run seed",
+    "db:init": "tsx scripts/init-db.ts",
+    "db:test": "node scripts/test-mongodb.js",
     "vercel:deploy": "vercel --prod",
     "vercel:dev": "vercel dev",
     "vercel:build": "vercel build",

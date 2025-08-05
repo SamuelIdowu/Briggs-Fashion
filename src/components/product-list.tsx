@@ -12,7 +12,7 @@ import { Badge } from './ui/badge';
 import { useModal } from '@/hooks/useModal';
 import { useProducts } from '@/hooks/useProducts';
 import type { Product } from '@/types';
-import { Search, Grid3X3, List, X } from 'lucide-react';
+import { Search, Grid3X3, List, X, Filter } from 'lucide-react';
 
 interface ProductListProps {
   initialFilters?: {
@@ -41,6 +41,7 @@ function ProductListContent({
   const [viewMode, setViewMode] = useState<'grid' | 'list'>(layout);
   const [searchQuery, setSearchQuery] = useState(initialFilters.search || '');
   const [collections, setCollections] = useState<any[]>([]);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState({
     categories: [],
     types: [],
@@ -61,18 +62,41 @@ function ProductListContent({
 
   // Fetch collections for category options
   useEffect(() => {
-    fetch('/api/collections')
-      .then(res => res.json())
-      .then(data => {
+    const fetchCollections = async () => {
+      try {
+        console.log('📋 Fetching collections...');
+        const res = await fetch('/api/collections');
+        const data = await res.json();
         console.log('📋 Collections API response:', data);
-        if (data.success) {
-          setCollections(data.data.collections || []);
+        
+        if (data.success && data.data && data.data.collections) {
+          setCollections(data.data.collections);
           console.log('📋 Collections set:', data.data.collections);
+        } else {
+          console.warn('📋 Collections API returned no data or error:', data);
+          // Fallback: Use static test collections if API fails
+          const testCollections = [
+            { name: 'Suits', _id: 'suits' },
+            { name: 'Shirts', _id: 'shirts' },
+            { name: 'Accessories', _id: 'accessories' }
+          ];
+          setCollections(testCollections);
+          console.log('📋 Fallback: Using test collections:', testCollections);
         }
-      })
-      .catch(error => {
-        console.error('Error fetching collections:', error);
-      });
+      } catch (error) {
+        console.error('❌ Error fetching collections:', error);
+        // Fallback: Use static test collections if API fails
+        const testCollections = [
+          { name: 'Suits', _id: 'suits' },
+          { name: 'Shirts', _id: 'shirts' },
+          { name: 'Accessories', _id: 'accessories' }
+        ];
+        setCollections(testCollections);
+        console.log('📋 Fallback: Using test collections:', testCollections);
+      }
+    };
+    
+    fetchCollections();
   }, []);
 
   const availableFilters = useMemo(() => {
@@ -119,17 +143,28 @@ function ProductListContent({
     console.log('🔍 Filter change:', newFilters);
     const params = new URLSearchParams(searchParams);
     
-    // Update URL params
-    if (newFilters.category) {
-      params.set('category', newFilters.category);
+    // Handle categories array
+    if (newFilters.categories && newFilters.categories.length > 0) {
+      // For now, only use the first category for URL (API limitation)
+      params.set('category', newFilters.categories[0]);
     } else {
       params.delete('category');
     }
     
-    if (newFilters.type) {
-      params.set('type', newFilters.type);
+    // Handle types array
+    if (newFilters.types && newFilters.types.length > 0) {
+      // For now, only use the first type for URL (API limitation)
+      params.set('type', newFilters.types[0]);
     } else {
       params.delete('type');
+    }
+    
+    // Handle single category/type for backward compatibility
+    if (newFilters.category) {
+      params.set('category', newFilters.category);
+    }
+    if (newFilters.type) {
+      params.set('type', newFilters.type);
     }
     
     router.push(`/products?${params.toString()}`);
@@ -188,13 +223,28 @@ function ProductListContent({
           )}
           
           {showFilters && (
-            <FilterSidebar
-              filters={availableFilters}
-              selectedFilters={activeFilters}
-              onFilterChange={handleFilterChange}
-              isOpen={false}
-              onClose={() => {}}
-            />
+            <>
+              <Button
+                variant="outline"
+                onClick={() => setIsFilterOpen(true)}
+                className="flex items-center gap-2"
+              >
+                <Filter className="h-4 w-4" />
+                Filters
+                {activeFilters.categories.length > 0 || activeFilters.types.length > 0 ? (
+                  <Badge variant="secondary" className="ml-1 h-5 w-5 p-0 text-xs">
+                    {activeFilters.categories.length + activeFilters.types.length}
+                  </Badge>
+                ) : null}
+              </Button>
+              <FilterSidebar
+                filters={availableFilters}
+                selectedFilters={activeFilters}
+                onFilterChange={handleFilterChange}
+                isOpen={isFilterOpen}
+                onClose={() => setIsFilterOpen(false)}
+              />
+            </>
           )}
         </div>
         

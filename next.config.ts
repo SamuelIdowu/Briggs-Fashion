@@ -2,7 +2,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   // Production optimizations
-  output: 'standalone',
+  // output: 'standalone', // Temporarily disabled to fix build issues
   
   // TypeScript and ESLint
   typescript: {
@@ -41,10 +41,20 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60,
   },
   
-  // Performance optimizations
+  // Performance optimizations for Next.js 15
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: ['@radix-ui/react-icons'],
+    optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
+  },
+  
+  // Turbopack configuration (moved from experimental.turbo)
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
   },
   
   // Compression
@@ -67,6 +77,10 @@ const nextConfig: NextConfig = {
           {
             key: 'Referrer-Policy',
             value: 'origin-when-cross-origin',
+          },
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
           },
         ],
       },

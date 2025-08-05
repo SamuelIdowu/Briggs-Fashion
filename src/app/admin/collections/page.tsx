@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,17 +12,24 @@ import {
   Trash2,
   FolderOpen,
   Search,
-  Filter,
   Eye,
   EyeOff,
   RefreshCw
 } from "lucide-react";
 
+interface Product {
+  _id: string;
+  name: string;
+  price: number;
+  category: string;
+  type: string;
+}
+
 interface Collection {
   _id: string;
   name: string;
   description: string;
-  products: any[];
+  products: Product[];
   isActive: boolean;
   createdAt: string;
   productCount?: number;

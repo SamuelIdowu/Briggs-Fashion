@@ -1,14 +1,15 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { ProductList } from "@/components/product-list";
 
-export default function ProductsPage() {
+function ProductsPageContent() {
   const searchParams = useSearchParams();
-  const initialCategory = searchParams.get("category") || "";
-  const initialSearch = searchParams.get("search") || "";
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  const initialCategory = searchParams?.get("category") || "";
+  const initialSearch = searchParams?.get("search") || "";
   
   const initialFilters = {
     category: initialCategory || undefined,
@@ -62,5 +63,13 @@ export default function ProductsPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense>
+      <ProductsPageContent />
+    </Suspense>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
 import { Button } from "./ui/button";
@@ -10,7 +10,6 @@ import { Menu, Search } from "lucide-react";
 
 export function Header() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   
   const navItems = [
     { href: "/products", label: "All Products" },

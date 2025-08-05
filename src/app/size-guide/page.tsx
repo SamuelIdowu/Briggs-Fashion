@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -43,7 +43,7 @@ function TabPanel({ value, children }: { value: string; children: React.ReactNod
   return <div>{children}</div>;
 }
 
-export default function SizeGuidePage() {
+function SizeGuideContent() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   const heroImages = ['/inspo4.jpg', '/inspo5.jpg', '/inspo6.jpg'];
@@ -102,34 +102,31 @@ export default function SizeGuidePage() {
             </div>
 
             {/* Size Guide Tabs */}
-            <Tabs
-              tabs={[
-                { value: 'ready-made', label: 'Ready-Made Sizes' },
-                { value: 'custom', label: 'Custom Measurements' },
-              ]}
-              defaultTab="ready-made"
-              className="w-full"
-            >
+            <Tabs tabs={[
+              { value: 'ready-made', label: 'Ready-Made Sizes' },
+              { value: 'custom', label: 'Custom Measurements' },
+              { value: 'tips', label: 'Sizing Tips' }
+            ]} defaultTab="ready-made" className="mb-8">
+
               <TabPanel value="ready-made">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Users className="h-5 w-5" />
-                      Standard Size Chart
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-6">
-                      <div>
-                        <h3 className="font-semibold mb-3">Shirts & Tops</h3>
+                <div className="space-y-8">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Ruler className="h-5 w-5" />
+                        Ready-Made Size Chart
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="overflow-x-auto">
                         <Table>
                           <TableHeader>
                             <TableRow>
                               <TableHead>Size</TableHead>
                               <TableHead>Chest (inches)</TableHead>
                               <TableHead>Waist (inches)</TableHead>
-                              <TableHead>Shoulder (inches)</TableHead>
-                              <TableHead>Sleeve (inches)</TableHead>
+                              <TableHead>Hip (inches)</TableHead>
+                              <TableHead>Length (inches)</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -137,227 +134,226 @@ export default function SizeGuidePage() {
                               <TableCell className="font-medium">S</TableCell>
                               <TableCell>36-38</TableCell>
                               <TableCell>30-32</TableCell>
-                              <TableCell>16-17</TableCell>
-                              <TableCell>24-25</TableCell>
+                              <TableCell>38-40</TableCell>
+                              <TableCell>28-30</TableCell>
                             </TableRow>
                             <TableRow>
                               <TableCell className="font-medium">M</TableCell>
                               <TableCell>38-40</TableCell>
                               <TableCell>32-34</TableCell>
-                              <TableCell>17-18</TableCell>
-                              <TableCell>25-26</TableCell>
+                              <TableCell>40-42</TableCell>
+                              <TableCell>30-32</TableCell>
                             </TableRow>
                             <TableRow>
                               <TableCell className="font-medium">L</TableCell>
                               <TableCell>40-42</TableCell>
                               <TableCell>34-36</TableCell>
-                              <TableCell>18-19</TableCell>
-                              <TableCell>26-27</TableCell>
+                              <TableCell>42-44</TableCell>
+                              <TableCell>32-34</TableCell>
                             </TableRow>
                             <TableRow>
                               <TableCell className="font-medium">XL</TableCell>
                               <TableCell>42-44</TableCell>
                               <TableCell>36-38</TableCell>
-                              <TableCell>19-20</TableCell>
-                              <TableCell>27-28</TableCell>
+                              <TableCell>44-46</TableCell>
+                              <TableCell>34-36</TableCell>
                             </TableRow>
                             <TableRow>
                               <TableCell className="font-medium">XXL</TableCell>
                               <TableCell>44-46</TableCell>
                               <TableCell>38-40</TableCell>
-                              <TableCell>20-21</TableCell>
-                              <TableCell>28-29</TableCell>
+                              <TableCell>46-48</TableCell>
+                              <TableCell>36-38</TableCell>
                             </TableRow>
                           </TableBody>
                         </Table>
                       </div>
+                    </CardContent>
+                  </Card>
 
-                      <Separator />
-
-                      <div>
-                        <h3 className="font-semibold mb-3">Trousers & Pants</h3>
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Size</TableHead>
-                              <TableHead>Waist (inches)</TableHead>
-                              <TableHead>Hip (inches)</TableHead>
-                              <TableHead>Inseam (inches)</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            <TableRow>
-                              <TableCell className="font-medium">30W</TableCell>
-                              <TableCell>30-31</TableCell>
-                              <TableCell>38-39</TableCell>
-                              <TableCell>32</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">32W</TableCell>
-                              <TableCell>32-33</TableCell>
-                              <TableCell>40-41</TableCell>
-                              <TableCell>32</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">34W</TableCell>
-                              <TableCell>34-35</TableCell>
-                              <TableCell>42-43</TableCell>
-                              <TableCell>32</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">36W</TableCell>
-                              <TableCell>36-37</TableCell>
-                              <TableCell>44-45</TableCell>
-                              <TableCell>32</TableCell>
-                            </TableRow>
-                          </TableBody>
-                        </Table>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>How to Measure</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <h4 className="font-semibold mb-2">Chest</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Measure around the fullest part of your chest, keeping the tape horizontal.
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2">Waist</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Measure around your natural waistline, keeping the tape comfortably loose.
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2">Hip</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Measure around the fullest part of your hips, keeping the tape horizontal.
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2">Length</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Measure from the top of your shoulder to your desired length.
+                          </p>
+                        </div>
                       </div>
-
-                      <div className="bg-secondary p-4 rounded-lg">
-                        <h4 className="font-semibold mb-2">📏 How to Measure</h4>
-                        <ul className="text-sm text-muted-foreground space-y-1">
-                          <li><strong>Chest:</strong> Measure around the fullest part of your chest</li>
-                          <li><strong>Waist:</strong> Measure around your natural waistline</li>
-                          <li><strong>Shoulder:</strong> Measure from shoulder tip to shoulder tip</li>
-                          <li><strong>Sleeve:</strong> Measure from shoulder to desired sleeve length</li>
-                          <li><strong>Hip:</strong> Measure around the fullest part of your hips</li>
-                          <li><strong>Inseam:</strong> Measure from crotch to desired pant length</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </div>
               </TabPanel>
 
               <TabPanel value="custom">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Ruler className="h-5 w-5" />
-                      Custom Tailoring Measurements
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-6">
-                      <div>
-                        <p className="text-muted-foreground mb-4">
-                          For custom tailoring, we take comprehensive measurements to ensure the perfect fit. 
-                          Our master tailors will guide you through the entire process.
-                        </p>
-                        
-                        <h3 className="font-semibold mb-3">Required Measurements for Custom Pieces</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <h4 className="font-medium">Upper Body</h4>
-                            <ul className="text-sm text-muted-foreground space-y-1">
-                              <li>• Neck circumference</li>
-                              <li>• Shoulder width</li>
-                              <li>• Chest circumference</li>
-                              <li>• Waist circumference</li>
-                              <li>• Arm length</li>
-                              <li>• Wrist circumference</li>
-                            </ul>
-                          </div>
-                          <div className="space-y-2">
-                            <h4 className="font-medium">Lower Body</h4>
-                            <ul className="text-sm text-muted-foreground space-y-1">
-                              <li>• Hip circumference</li>
-                              <li>• Thigh circumference</li>
-                              <li>• Knee circumference</li>
-                              <li>• Calf circumference</li>
-                              <li>• Ankle circumference</li>
-                              <li>• Inseam length</li>
-                            </ul>
-                          </div>
+                <div className="space-y-8">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Users className="h-5 w-5" />
+                        Custom Tailoring Measurements
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-6">
+                        For custom tailoring, we take detailed measurements to ensure a perfect fit. 
+                        Our master tailors will guide you through the process and create a garment 
+                        that fits your unique body shape and style preferences.
+                      </p>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <h4 className="font-semibold mb-3">What We Measure</h4>
+                          <ul className="space-y-2 text-sm text-muted-foreground">
+                            <li>• Neck circumference</li>
+                            <li>• Shoulder width</li>
+                            <li>• Chest circumference</li>
+                            <li>• Waist circumference</li>
+                            <li>• Hip circumference</li>
+                            <li>• Arm length</li>
+                            <li>• Leg length</li>
+                            <li>• Height and weight</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-3">Custom Fitting Process</h4>
+                          <ol className="space-y-2 text-sm text-muted-foreground">
+                            <li>1. Initial consultation and style discussion</li>
+                            <li>2. Detailed measurements taken</li>
+                            <li>3. Fabric selection and design approval</li>
+                            <li>4. First fitting and adjustments</li>
+                            <li>5. Final fitting and delivery</li>
+                          </ol>
                         </div>
                       </div>
+                    </CardContent>
+                  </Card>
 
-                      <Separator />
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Book a Custom Fitting</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-4">
+                        Ready for a custom piece? Contact us to schedule a fitting appointment 
+                        with our master tailors.
+                      </p>
+                      <Button onClick={handleWhatsAppClick} className="bg-green-600 hover:bg-green-700">
+                        <MessageCircle className="mr-2 h-4 w-4" />
+                        Schedule Custom Fitting
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabPanel>
 
-                      <div className="bg-primary/10 p-4 rounded-lg">
-                        <h4 className="font-semibold mb-2">🎯 Custom Tailoring Process</h4>
-                        <ol className="text-sm text-muted-foreground space-y-2">
-                          <li><strong>1. Consultation:</strong> Discuss your design preferences and requirements</li>
-                          <li><strong>2. Measurements:</strong> Professional measurement session with our tailors</li>
-                          <li><strong>3. Fabric Selection:</strong> Choose from our premium fabric collection</li>
-                          <li><strong>4. Fitting:</strong> Multiple fittings to ensure perfect fit</li>
-                          <li><strong>5. Delivery:</strong> Final delivery with care instructions</li>
-                        </ol>
+              <TabPanel value="tips">
+                <div className="space-y-8">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Sizing Tips & Best Practices</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-6">
+                        <div>
+                          <h4 className="font-semibold mb-2">Getting Accurate Measurements</h4>
+                          <ul className="space-y-1 text-sm text-muted-foreground">
+                            <li>• Use a flexible measuring tape</li>
+                            <li>• Measure over light clothing or bare skin</li>
+                            <li>• Keep the tape snug but not tight</li>
+                            <li>• Stand naturally with arms relaxed</li>
+                            <li>• Have someone else measure you for accuracy</li>
+                          </ul>
+                        </div>
+                        
+                        <Separator />
+                        
+                        <div>
+                          <h4 className="font-semibold mb-2">Choosing the Right Size</h4>
+                          <ul className="space-y-1 text-sm text-muted-foreground">
+                            <li>• If between sizes, choose the larger size</li>
+                            <li>• Consider the garment's intended fit (slim, regular, loose)</li>
+                            <li>• Account for layering if you plan to wear undergarments</li>
+                            <li>• Remember that different styles may fit differently</li>
+                          </ul>
+                        </div>
+                        
+                        <Separator />
+                        
+                        <div>
+                          <h4 className="font-semibold mb-2">When to Choose Custom</h4>
+                          <ul className="space-y-1 text-sm text-muted-foreground">
+                            <li>• If you're between standard sizes</li>
+                            <li>• For special occasions or formal events</li>
+                            <li>• If you have specific style preferences</li>
+                            <li>• For unique body proportions</li>
+                            <li>• When you want a truly personalized garment</li>
+                          </ul>
+                        </div>
                       </div>
+                    </CardContent>
+                  </Card>
 
-                      <div className="text-center">
-                        <Button 
-                          onClick={handleWhatsAppClick}
-                          className="bg-green-600 hover:bg-green-700 text-white"
-                        >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Need Help?</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-4">
+                        Unsure about your size or need assistance with measurements? 
+                        Our team is here to help you find the perfect fit.
+                      </p>
+                      <div className="flex flex-col sm:flex-row gap-4">
+                        <Button onClick={handleWhatsAppClick} className="bg-green-600 hover:bg-green-700">
                           <MessageCircle className="mr-2 h-4 w-4" />
-                          Schedule Custom Fitting
+                          Get Sizing Help
+                        </Button>
+                        <Button asChild variant="outline">
+                          <Link href="/contact">Contact Us</Link>
                         </Button>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </div>
               </TabPanel>
             </Tabs>
-
-            {/* Tips Section */}
-            <div className="mt-12">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Size Guide Tips</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <h4 className="font-semibold mb-2">For Ready-Made Items</h4>
-                      <ul className="text-sm text-muted-foreground space-y-1">
-                        <li>• Measure yourself while wearing light clothing</li>
-                        <li>• Use a flexible measuring tape</li>
-                        <li>• Don't pull the tape too tight</li>
-                        <li>• If between sizes, choose the larger size</li>
-                        <li>• Consider your preferred fit (slim, regular, loose)</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-2">For Custom Tailoring</h4>
-                      <ul className="text-sm text-muted-foreground space-y-1">
-                        <li>• Schedule a professional fitting session</li>
-                        <li>• Bring shoes you'll wear with the outfit</li>
-                        <li>• Consider seasonal variations in fit</li>
-                        <li>• Discuss any specific requirements</li>
-                        <li>• Allow time for multiple fittings</li>
-                      </ul>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* CTA Section */}
-            <div className="mt-12 text-center">
-              <div className="bg-secondary p-8 rounded-lg">
-                <h3 className="text-2xl font-bold mb-4">Need Help with Sizing?</h3>
-                <p className="text-muted-foreground mb-6">
-                  Our team is here to help you find the perfect fit. Contact us for personalized assistance.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button 
-                    onClick={handleWhatsAppClick}
-                    className="bg-green-600 hover:bg-green-700 text-white"
-                  >
-                    <MessageCircle className="mr-2 h-4 w-4" />
-                    WhatsApp Support
-                  </Button>
-                  <Button asChild variant="outline">
-                    <Link href="/contact">Contact Us</Link>
-                  </Button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
     </div>
+  );
+}
+
+export default function SizeGuidePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    }>
+      <SizeGuideContent />
+    </Suspense>
   );
 }

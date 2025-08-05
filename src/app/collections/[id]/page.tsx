@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { ProductList } from '@/components/product-list';
+import { ProductListWrapper } from '@/components/product-list-wrapper';
 import { StructuredData } from '@/components/structured-data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -71,7 +71,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
       {/* Products */}
       <section className="py-16 sm:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <ProductList 
+          <ProductListWrapper 
             initialFilters={{}}
             showFilters={true}
             showSearch={true}

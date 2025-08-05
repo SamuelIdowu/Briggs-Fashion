@@ -9,7 +9,7 @@ import {
   LogOut,
   Menu
 } from "lucide-react";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 
 const sidebarItems = [
   {
@@ -29,7 +29,7 @@ const sidebarItems = [
   },
 ];
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -102,31 +102,39 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Main content */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Header */}
-          <header className="bg-white shadow-sm border-b">
-            <div className="flex items-center justify-between px-6 py-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="lg:hidden"
-                onClick={() => setSidebarOpen(true)}
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
-              <div className="flex items-center space-x-4">
-                <div className="text-sm text-gray-600">
-                  Welcome back, Admin
-                </div>
-              </div>
-            </div>
-          </header>
+          {/* Mobile header */}
+          <div className="lg:hidden flex h-16 items-center justify-between px-4 border-b bg-white">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+            <h1 className="text-lg font-semibold">Admin Panel</h1>
+            <div className="w-10" /> {/* Spacer for centering */}
+          </div>
 
           {/* Page content */}
-          <main className="flex-1 overflow-y-auto">
-            {children}
+          <main className="flex-1 overflow-y-auto bg-gray-50">
+            <div className="p-6">
+              {children}
+            </div>
           </main>
         </div>
       </div>
     </AdminAuthGuard>
+  );
+}
+
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    }>
+      <AdminLayoutContent>{children}</AdminLayoutContent>
+    </Suspense>
   );
 }

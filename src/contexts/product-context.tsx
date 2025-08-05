@@ -1,7 +1,6 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useProducts } from '@/hooks/useProducts';
 import type { Product, ProductFilters } from '@/types';
 
 interface ProductContextType {
@@ -50,8 +49,6 @@ export function ProductProvider({ children }: ProductProviderProps) {
   const [loadingFeatured, setLoadingFeatured] = useState(true);
   const [loadingNewArrivals, setLoadingNewArrivals] = useState(true);
   const [loadingCollections, setLoadingCollections] = useState(true);
-
-  const { getFeaturedProducts, getProductsByCategory, getProductsByType, getProduct } = useProducts();
 
   // Load featured products
   const loadFeaturedProducts = async () => {
@@ -120,6 +117,31 @@ export function ProductProvider({ children }: ProductProviderProps) {
 
   const refreshCollections = () => {
     loadCollections();
+  };
+
+  // Placeholder functions for product actions
+  const getProduct = async (id: string): Promise<Product | null> => {
+    try {
+      const response = await fetch(`/api/products/${id}`);
+      if (response.ok) {
+        const data = await response.json();
+        return data.product;
+      }
+      return null;
+    } catch (error) {
+      console.error('Failed to get product:', error);
+      return null;
+    }
+  };
+
+  const getProductsByCategory = async (category: string) => {
+    // This function is not used in the context, but kept for interface compatibility
+    console.log('getProductsByCategory called with:', category);
+  };
+
+  const getProductsByType = async (type: string) => {
+    // This function is not used in the context, but kept for interface compatibility
+    console.log('getProductsByType called with:', type);
   };
 
   const value: ProductContextType = {

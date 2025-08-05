@@ -4,9 +4,20 @@ import Product from '@/models/Product';
 import Collection from '@/models/Collection';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  await dbConnect();
-  const products = await Product.find().lean();
-  const collections = await Collection.find().lean();
+  const connection = await dbConnect();
+  
+  let products: any[] = [];
+  let collections: any[] = [];
+  
+  if (connection) {
+    try {
+      products = await Product.find().lean();
+      collections = await Collection.find().lean();
+    } catch (error) {
+      console.error('Error fetching data for sitemap:', error);
+      // Continue with empty arrays - static pages will still be included
+    }
+  }
 
   const baseUrl = 'https://briggsfashion.com';
 

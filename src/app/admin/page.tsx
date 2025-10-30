@@ -14,7 +14,7 @@ import {
   DollarSign
 } from "lucide-react";
 import Link from "next/link";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice } from "../../lib/utils";
 
 interface DashboardStats {
   totalProducts: number;

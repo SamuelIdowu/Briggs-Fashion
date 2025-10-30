@@ -7,7 +7,7 @@ import { Label } from '../../../components/ui/label';
 import { Textarea } from '../../../components/ui/textarea';
 import { Card, CardContent } from '../../../components/ui/card';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice } from '../../../lib/utils';
 
 const emptyProduct = {
   name: '',

@@ -3,10 +3,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState, Suspense } from 'react';
-import { Button } from '@/components/ui/button';
-import { ProductCard } from '@/components/product-card';
-import { ProductModal } from '@/components/product-modal';
-import type { Product } from '@/types';
+import { Button } from '../components/ui/button';
+import { ProductCard } from '../components/product-card';
+import { ProductModal } from '../components/product-modal';
+import type { Product } from '../types';
 
 function HomeContent() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);

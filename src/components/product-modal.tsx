@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { WhatsAppButton } from '@/components/whatsapp-button';
+import { Button } from './ui/button';
+import { Dialog, DialogContent, DialogTitle } from './ui/dialog';
+import { Badge } from './ui/badge';
+import { Separator } from './ui/separator';
+import { WhatsAppButton } from './whatsapp-button';
 import { formatPrice, getCategoryDisplayName, getTypeDisplayName } from '@/utils/helpers';
 import { createProductInquiry } from '@/utils/whatsappUtils';
 import { Product } from '@/types';

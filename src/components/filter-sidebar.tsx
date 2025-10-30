@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { Filter, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Badge } from '@/components/ui/badge';
+import { Button } from './ui/button';
+import { Checkbox } from './ui/checkbox';
+import { Label } from './ui/label';
+import { Separator } from './ui/separator';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from './ui/sheet';
+import { Badge } from './ui/badge';
 
 interface FilterSidebarProps {
   filters: {

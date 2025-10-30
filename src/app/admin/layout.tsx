@@ -1,6 +1,6 @@
 "use client";
-import { AdminAuthGuard } from "@/components/AdminAuthGuard";
-import { Button } from "@/components/ui/button";
+import { AdminAuthGuard } from "../../components/AdminAuthGuard";
+import { Button } from "../../components/ui/button";
 import { useRouter } from "next/navigation";
 import { 
   LayoutDashboard, 

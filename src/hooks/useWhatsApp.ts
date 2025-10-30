@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
-import { WhatsAppService, WhatsAppMessage } from '@/services/whatsappService';
+import { WhatsAppService, WhatsAppMessage } from '../services/whatsappService';
 
 export function useWhatsApp() {
   const sendInquiry = useCallback(async (message: WhatsAppMessage) => {

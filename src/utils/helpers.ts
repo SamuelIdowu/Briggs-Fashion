@@ -1,4 +1,4 @@
-import type { Product } from '@/types';
+import type { Product } from '../types';
 
 // Format price in Nigerian Naira
 export function formatPrice(price: number): string {

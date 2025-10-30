@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import type { Product, ProductFilters } from '@/types';
+import type { Product, ProductFilters } from '../types';
 
 interface ProductContextType {
   // Featured products

@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { AboutContent } from '@/components/about-content';
+import { AboutContent } from '../../components/about-content';
 
 export default function AboutPage() {
   return (

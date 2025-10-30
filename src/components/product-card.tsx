@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { Product } from "@/types";
+import type { Product } from "../types";
 import { formatPrice } from "@/lib/utils";
 import { Badge } from "./ui/badge";
 

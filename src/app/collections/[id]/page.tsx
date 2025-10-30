@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation';
-import { ProductListWrapper } from '@/components/product-list-wrapper';
-import { StructuredData } from '@/components/structured-data';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { ProductListWrapper } from '../../../components/product-list-wrapper';
+import { StructuredData } from '../../../components/structured-data';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Badge } from '../../../components/ui/badge';
 import { formatDate } from '@/lib/utils';
-import type { Collection } from '@/types';
+import type { Collection } from '../../../types';
 
 interface CollectionPageProps {
   params: Promise<{

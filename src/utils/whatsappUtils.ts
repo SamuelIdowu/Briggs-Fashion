@@ -1,5 +1,5 @@
-import { WhatsAppService, WhatsAppMessage } from '@/services/whatsappService';
-import { WHATSAPP_NUMBERS } from '@/utils/constants';
+import { WhatsAppService, WhatsAppMessage } from '../services/whatsappService';
+import { WHATSAPP_NUMBERS } from '../utils/constants';
 
 // Declare gtag for TypeScript
 declare global {

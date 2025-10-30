@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { ProductService, ProductFilters, ProductResponse } from '@/services/productService';
-import type { Product } from '@/types';
+import { ProductService, ProductFilters, ProductResponse } from '../services/productService';
+import type { Product } from '../types';
 
 export function useProducts(initialFilters: ProductFilters = {}) {
   const searchParams = useSearchParams();

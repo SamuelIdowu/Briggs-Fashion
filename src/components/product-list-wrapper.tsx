@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense } from 'react';
-import { ProductList } from '@/components/product-list';
+import { ProductList } from './product-list';
 
 interface ProductListWrapperProps {
   initialFilters?: {

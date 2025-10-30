@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
-import { ProductList } from "@/components/product-list";
+import { ProductList } from "../../components/product-list";
 
 function ProductsPageContent() {
   const searchParams = useSearchParams();

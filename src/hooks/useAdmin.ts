@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { useAuth } from '@/contexts/auth-context';
-import type { Product, Collection, SiteSettings } from '@/types';
+import { useAuth } from '../contexts/auth-context';
+import type { Product, Collection, SiteSettings } from '../types';
 
 interface AdminStats {
   totalProducts: number;

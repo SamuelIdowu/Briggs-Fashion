@@ -9,7 +9,7 @@ import { Separator } from './ui/separator';
 import { WhatsAppButton } from './whatsapp-button';
 import { formatPrice, getCategoryDisplayName, getTypeDisplayName } from '@/utils/helpers';
 import { createProductInquiry } from '@/utils/whatsappUtils';
-import { Product } from '@/types';
+import { Product } from '../types';
 
 interface ProductModalProps {
   product: Product | null;

@@ -1,5 +1,5 @@
-import ServerEnvDisplay from '@/components/server-env-display';
-import EnvDisplay from '@/components/env-display';
+import ServerEnvDisplay from '../../components/server-env-display';
+import EnvDisplay from '../../components/env-display';
 
 export default function TestEnvPage() {
   return (

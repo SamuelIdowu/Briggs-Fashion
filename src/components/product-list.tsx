@@ -9,9 +9,9 @@ import { FilterSidebar } from './filter-sidebar';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
-import { useModal } from '@/hooks/useModal';
-import { useProducts } from '@/hooks/useProducts';
-import type { Product } from '@/types';
+import { useModal } from '../hooks/useModal';
+import { useProducts } from '../hooks/useProducts';
+import type { Product } from '../types';
 import { Search, Grid3X3, List, X, Filter } from 'lucide-react';
 
 interface ProductListProps {

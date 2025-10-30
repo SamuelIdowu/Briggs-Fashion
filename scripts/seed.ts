@@ -13,11 +13,15 @@ import SiteSettings from '../src/models/SiteSettings';
 import { products, collections, siteSettings } from '../src/lib/data';
 
 
-console.log('MONGODB_URI:', process.env.MONGODB_URI);
+if (process.env.NODE_ENV !== 'production') {
+  console.log('MONGODB_URI:', process.env.MONGODB_URI);
+}
 async function seed() {
   try {
     await dbConnect();
-    console.log('Connected to database');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Connected to database');
+    }
 
     // Clear existing data to avoid duplicates
     await Product.deleteMany({});
@@ -27,14 +31,20 @@ async function seed() {
     // Create admin user if method exists
     if (typeof (User as any).createAdminIfNotExists === 'function') {
       await (User as any).createAdminIfNotExists();
-      console.log('Admin user created/verified');
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Admin user created/verified');
+      }
     } else {
-      console.log('Skipping admin user creation (method not found)');
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Skipping admin user creation (method not found)');
+      }
     }
 
     // Insert products and build a map from string id to MongoDB _id
     const createdProducts = await Product.insertMany(products);
-    console.log(`${createdProducts.length} products created`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`${createdProducts.length} products created`);
+    }
     const idMap = new Map<string, any>();
     for (const prod of createdProducts) {
       idMap.set(prod.id, prod._id);
@@ -48,9 +58,13 @@ async function seed() {
 
     // Insert collections with ObjectId references
     await Collection.insertMany(collectionsWithObjectIds);
-    console.log(`${collectionsWithObjectIds.length} collections created`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`${collectionsWithObjectIds.length} collections created`);
+    }
 
-    console.log('Database seeding completed successfully!');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Database seeding completed successfully!');
+    }
     process.exit(0);
   } catch (error) {
     console.error('Seeding error:', error);

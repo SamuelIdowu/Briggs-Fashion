@@ -12,36 +12,42 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '12', 10);
     const skip = (page - 1) * limit;
 
-    console.log('🔍 API Request URL:', request.url);
-    console.log('🔍 Search Params:', Object.fromEntries(searchParams.entries()));
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('🔍 API Request URL:', request.url);
+      console.log('🔍 Search Params:', Object.fromEntries(searchParams.entries()));
 
-    // Test: Check if products exist in database
-    const totalProducts = await Product.countDocuments({});
-    console.log('📊 Total products in database:', totalProducts);
-
-    // Test: Check if text index exists (only if collection exists)
-    try {
+      // Test: Check if products exist in database
       const totalProducts = await Product.countDocuments({});
-      if (totalProducts > 0) {
-        const indexes = await Product.collection.getIndexes();
-        console.log('📋 Database indexes:', Object.keys(indexes));
-      } else {
-        console.log('📋 No products found, skipping index check');
+      console.log('📊 Total products in database:', totalProducts);
+
+      // Test: Check if text index exists (only if collection exists)
+      try {
+        const totalProductsCheck = await Product.countDocuments({});
+        if (totalProductsCheck > 0) {
+          const indexes = await Product.collection.getIndexes();
+          console.log('📋 Database indexes:', Object.keys(indexes));
+        } else {
+          console.log('📋 No products found, skipping index check');
+        }
+      } catch (indexError: unknown) {
+        const errorMessage = indexError instanceof Error ? indexError.message : 'Unknown error';
+        console.log('❌ Could not check indexes (collection may not exist):', errorMessage);
       }
-    } catch (indexError: unknown) {
-      const errorMessage = indexError instanceof Error ? indexError.message : 'Unknown error';
-      console.log('❌ Could not check indexes (collection may not exist):', errorMessage);
     }
 
     // Filters
     const filters: any = {};
     if (searchParams.get('category')) {
       filters.category = searchParams.get('category');
-      console.log('✅ Category filter applied:', filters.category);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('✅ Category filter applied:', filters.category);
+      }
     }
     if (searchParams.get('type')) {
       filters.type = searchParams.get('type');
-      console.log('✅ Type filter applied:', filters.type);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('✅ Type filter applied:', filters.type);
+      }
     }
     if (searchParams.get('size')) {
       filters['variations.sizes'] = searchParams.get('size');
@@ -64,7 +70,9 @@ export async function GET(request: NextRequest) {
     // Handle search parameter (accept both 'search' and 'q')
     const searchQuery = searchParams.get('search') || searchParams.get('q');
     if (searchQuery) {
-      console.log('✅ Search query applied:', searchQuery);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('✅ Search query applied:', searchQuery);
+      }
       // Use regex for partial matching instead of strict text search
       const searchRegex = new RegExp(searchQuery, 'i'); // 'i' for case-insensitive
       filters.$or = [
@@ -77,8 +85,10 @@ export async function GET(request: NextRequest) {
     }
     filters.isActive = true;
 
-    console.log('🔍 Final filters object:', filters);
-    console.log('🔍 Category filter value:', filters.category);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('🔍 Final filters object:', filters);
+      console.log('🔍 Category filter value:', filters.category);
+    }
 
     // Query products
     let products, total;
@@ -91,7 +101,9 @@ export async function GET(request: NextRequest) {
         Product.countDocuments(filters),
       ]);
     } catch (dbError) {
-      console.warn('⚠️ Database query failed, using test data:', dbError);
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('⚠️ Database query failed, using test data:', dbError);
+      }
       // Fallback test data
       const testProducts = [
         {
@@ -203,8 +215,10 @@ export async function GET(request: NextRequest) {
       products = filteredProducts.slice(skip, skip + limit);
     }
 
-    console.log(`📊 Found ${products.length} products out of ${total} total`);
-    console.log('📋 Products categories:', products.map(p => p.category));
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`📊 Found ${products.length} products out of ${total} total`);
+      console.log('📋 Products categories:', products.map(p => p.category));
+    }
 
     const totalPages = Math.ceil(total / limit);
     const hasNextPage = page < totalPages;
@@ -225,7 +239,12 @@ export async function GET(request: NextRequest) {
       filters,
     });
   } catch (error) {
-    console.error('❌ Products API error:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('❌ Products API error:', error);
+    } else {
+      // In production, log a generic error to avoid exposing internal details
+      console.error('❌ Products API error');
+    }
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 } 

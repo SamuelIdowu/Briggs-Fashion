@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import dbConnect from '@/lib/database';
-import SiteSettings from '@/models/SiteSettings';
+import dbConnect from '../../../../lib/database';
+import SiteSettings from '../../../../models/SiteSettings';
 
 export async function GET(request: NextRequest) {
   try {

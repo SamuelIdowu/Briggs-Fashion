@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
-import dbConnect from '@/lib/database';
-import Product from '@/models/Product';
-import Collection from '@/models/Collection';
+import dbConnect from '../../lib/database';
+import Product from '../../models/Product';
+import Collection from '../../models/Collection';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const connection = await dbConnect();

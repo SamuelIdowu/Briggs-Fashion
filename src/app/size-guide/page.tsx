@@ -8,7 +8,7 @@ import { Separator } from '../../components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table';
 import { MessageCircle, Ruler, Users } from 'lucide-react';
 import Link from 'next/link';
-import { siteSettings } from '@/lib/data';
+import { siteSettings } from '../../lib/data';
 
 // Minimal Tabs implementation
 function Tabs({ tabs, defaultTab, children, className = '' }: {

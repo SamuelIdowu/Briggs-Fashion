@@ -4,7 +4,7 @@ import { MessageCircle } from 'lucide-react';
 import { Button } from './ui/button';
 import { useWhatsApp } from '../hooks/useWhatsApp';
 import { WhatsAppMessage } from '../services/whatsappService';
-import { trackWhatsAppClick } from '@/utils/whatsappUtils';
+import { trackWhatsAppClick } from '../utils/whatsappUtils';
 
 interface WhatsAppButtonProps {
   message: WhatsAppMessage;

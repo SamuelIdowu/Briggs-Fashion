@@ -7,8 +7,8 @@ import { Dialog, DialogContent, DialogTitle } from './ui/dialog';
 import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
 import { WhatsAppButton } from './whatsapp-button';
-import { formatPrice, getCategoryDisplayName, getTypeDisplayName } from '@/utils/helpers';
-import { createProductInquiry } from '@/utils/whatsappUtils';
+import { formatPrice, getCategoryDisplayName, getTypeDisplayName } from '../utils/helpers';
+import { createProductInquiry } from '../utils/whatsappUtils';
 import { Product } from '../types';
 
 interface ProductModalProps {

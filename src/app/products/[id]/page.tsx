@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { ProductGallery } from "../../../components/product-gallery";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice } from "../../../lib/utils";
 import { WhatsAppButton } from "../../../components/whatsapp-button";
 import { Badge } from "../../../components/ui/badge";
 import { Separator } from "../../../components/ui/separator";

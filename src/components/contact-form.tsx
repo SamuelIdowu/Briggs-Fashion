@@ -5,7 +5,7 @@ import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { MessageCircle, Phone, MapPin, Clock, Mail } from 'lucide-react';
-import { siteSettings } from '@/lib/data';
+import { siteSettings } from '../lib/data';
 
 export function ContactForm() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sign, SignOptions } from 'jsonwebtoken';
-import dbConnect from '../../../../../lib/database';
-import User from '../../../../../models/User';
+import dbConnect from '../../../../lib/database';
+import User from '../../../../models/User';
 
 export async function POST(request: NextRequest) {
   try {

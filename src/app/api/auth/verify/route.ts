@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verify } from 'jsonwebtoken';
-import dbConnect from '../../../../../lib/database';
-import User from '../../../../../models/User';
+import dbConnect from '../../../../lib/database';
+import User from '../../../../models/User';
 
 export async function GET(request: NextRequest) {
   try {
